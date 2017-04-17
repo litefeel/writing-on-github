@@ -1,7 +1,7 @@
 # Writing On GitHub #
 **Contributors:** litefeel  
 **Tags:** github, git, version control, content, collaboration, publishing  
-**Donate link:** https://www.paypal.me/litefeel
+**Donate link:** https://www.paypal.me/litefeel  
 **Requires at least:** 3.9  
 **Tested up to:** 4.7.3  
 **Stable tag:** 1.1  
