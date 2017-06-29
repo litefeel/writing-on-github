@@ -83,6 +83,14 @@ class Writing_On_GitHub_Admin {
 				'help_text' => __( 'The fallback user for import, in case Writing On GitHub cannot find the committer in the database.', 'writing-on-github' ),
 			)
 		);
+
+		register_setting( Writing_On_GitHub::$text_domain, 'wogh_ignore_metas' );
+		add_settings_field( 'wogh_ignore_metas', __( 'Ignore post metas', 'writing-on-github' ), array( &$this, 'textarea_field_callback' ), Writing_On_GitHub::$text_domain, 'general', array(
+				'default'   => '',
+				'name'      => 'wogh_ignore_metas',
+				'help_text' => __( 'These meta keys will be ignored and cannot be imported and exported. One meta key per line.', 'writing-on-github' ),
+			)
+		);
 	}
 
 	/**
@@ -101,6 +109,15 @@ class Writing_On_GitHub_Admin {
 	 */
 	public function user_field_callback( $args ) {
 		include dirname( dirname( __FILE__ ) ) . '/views/user-setting-field.php';
+	}
+
+	/**
+	 * Callback to render the textarea field.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function textarea_field_callback( $args ) {
+		include dirname( dirname( __FILE__ ) ) . '/views/textarea-setting-field.php';
 	}
 
 	/**

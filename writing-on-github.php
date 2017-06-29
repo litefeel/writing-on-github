@@ -172,6 +172,9 @@ class Writing_On_GitHub {
 		add_action( 'wogh_import', array( $this->controller, 'import_master' ), 10, 1 );
 		add_filter( 'get_edit_post_link', array( $this, 'edit_post_link' ), 10, 3 );
 
+		add_filter( 'wogh_post_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
+		add_filter( 'wogh_pre_import_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
+
 		do_action( 'wogh_boot', $this );
 	}
 
@@ -184,6 +187,29 @@ class Writing_On_GitHub {
 		}
 
 	    return $link;
+	}
+
+	public function ignore_post_meta($meta) {
+		$ignore_meta_keys = get_option('wogh_ignore_metas');
+		if (empty($ignore_meta_keys)) {
+			return $meta;
+		}
+
+		$keys = preg_split("/\\r\\n|\\r|\\n/", $ignore_meta_keys);
+		if (empty($keys)) {
+			return $meta;
+		}
+		foreach ($keys as $key => $value) {
+			$keys[$key] = trim($value);
+		}
+
+		foreach ($meta as $key => $value) {
+			if (in_array($key, $keys)) {
+				unset($meta[$key]);
+			}
+		}
+
+		return $meta;
 	}
 
 	/**
