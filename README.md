@@ -3,8 +3,8 @@
 **Tags:** github, git, version control, content, collaboration, publishing  
 **Donate link:** https://www.paypal.me/litefeel  
 **Requires at least:** 3.9  
-**Tested up to:** 4.7.3  
-**Stable tag:** 1.1  
+**Tested up to:** 4.8  
+**Stable tag:** 1.2  
 **License:** GPLv2  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
