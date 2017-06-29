@@ -370,7 +370,7 @@ class Writing_On_GitHub_Post {
 			'categories'   => wp_get_post_categories( $this->id, array( 'fields' => 'names' ) )
 		);
 		if ( !empty($this->post->post_name) ) {
-			$meta['post_name'] => $this->post->post_name;
+			$meta['post_name'] = $this->post->post_name;
 		}
 
 		//convert traditional post_meta values, hide hidden values, skip already populated values
