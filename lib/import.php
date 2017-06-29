@@ -287,6 +287,11 @@ class Writing_On_GitHub_Import {
 				unset( $meta['post_title'] );
 			}
 
+			if ( array_key_exists( 'post_name', $meta ) ) {
+				$args['post_name'] = $meta['post_name'];
+				unset( $meta['post_name'] );
+			}
+
 			if ( array_key_exists( 'ID', $meta ) ) {
 				$id = $args['ID'] = $meta['ID'];
 				$blob->set_id($id);

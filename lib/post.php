@@ -369,6 +369,9 @@ class Writing_On_GitHub_Post {
 			'tags'         => wp_get_post_tags( $this->id, array( 'fields' => 'names' ) ),
 			'categories'   => wp_get_post_categories( $this->id, array( 'fields' => 'names' ) )
 		);
+		if ( !empty($this->post->post_name) ) {
+			$meta['post_name'] => $this->post->post_name;
+		}
 
 		//convert traditional post_meta values, hide hidden values, skip already populated values
 		foreach ( get_post_custom( $this->id ) as $key => $value ) {
