@@ -85,6 +85,7 @@ Writing On GitHub is also capable of importing posts directly from GitHub, witho
 
     ---
     post_title: 'Post Title'
+    post_name: 'this is post name'
     layout: post_type_probably_post
     published: true_or_false
     author: author_name
