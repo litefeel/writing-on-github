@@ -180,6 +180,9 @@ class Writing_On_GitHub_Database {
 		$args = $post->get_args();
 		$meta = $post->get_meta();
 
+		// prevent backslash loss
+		$args['post_content'] = addslashes($args['post_content']);
+
 		// update tags
 		if ( isset( $meta['tags'] ) && $meta['tags'] ) {
 		    $args['tags_input'] = $meta['tags'];
