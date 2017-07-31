@@ -98,9 +98,9 @@ class Writing_On_GitHub_Fetch_Client extends Writing_On_GitHub_Base_Client {
 	 * @return Writing_On_GitHub_Blob|WP_Error
 	 */
 	public function blob( $blob ) {
-		if ( $cache = $this->app->cache()->fetch_blob( $blob->sha ) ) {
-			return $cache;
-		}
+		// if ( $cache = $this->app->cache()->fetch_blob( $blob->sha ) ) {
+		// 	return $cache;
+		// }
 
 		$data = $this->call( 'GET', $this->blob_endpoint() . '/' . $blob->sha );
 
@@ -111,6 +111,7 @@ class Writing_On_GitHub_Fetch_Client extends Writing_On_GitHub_Base_Client {
 		$data->path = $blob->path;
 		$obj = new Writing_On_GitHub_Blob( $data );
 
-		return $this->app->cache()->set_blob( $obj->sha(), $obj );
+		return $obj;
+		// return $this->app->cache()->set_blob( $obj->sha(), $obj );
 	}
 }
