@@ -81,6 +81,7 @@ You can also activate the Markdown module from [Jetpack](https://wordpress.org/p
 
 ### GitHub directory structure ###
 
+~~~
 .
 ├── _pages
 |   └── 2007-10-29-some-pages.md
@@ -88,6 +89,7 @@ You can also activate the Markdown module from [Jetpack](https://wordpress.org/p
 |   └── 2009-04-26-some-posts.md
 └── images
     └── some-images # copy all files (include subdirectory) to wordpress
+~~~
 
 ### Importing from GitHub ###
 
