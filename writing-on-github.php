@@ -61,7 +61,7 @@ class Writing_On_GitHub {
 	 * Current version
 	 * @var string
 	 */
-	public static $version = '1.7.5';
+	public static $version = '1.4';
 
 	/**
 	 * Controller object
