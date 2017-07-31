@@ -18,7 +18,7 @@ Some code for this plugin comes from [Wordpress GitHub Sync](https://github.com/
 
 Ever wish you could collaboratively author content for your WordPress site (or expose change history publicly and accept pull requests from your readers)?
 
-Well, now you can! Introducing [Writing On GitHub](https://github.com/litefeel/writing-on-wordpress)!
+Well, now you can! Introducing [Writing On GitHub](https://github.com/litefeel/writing-on-github)!
 
 ### Writing On GitHub does three things: ###
 
