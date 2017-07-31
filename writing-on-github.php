@@ -174,6 +174,7 @@ class Writing_On_GitHub {
 
 		add_filter( 'wogh_post_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
 		add_filter( 'wogh_pre_import_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
+		add_filter( 'the_content', array( $this, 'the_content' ) );
 
 		do_action( 'wogh_boot', $this );
 	}
@@ -210,6 +211,30 @@ class Writing_On_GitHub {
 		}
 
 		return $meta;
+	}
+
+	public function the_content($content) {
+		$arr = wp_upload_dir();
+		$baseurl = $arr['baseurl'] . '/writing-on-github';
+
+		$content = preg_replace_callback(
+			'/(<img [^>]*?src=[\'"])\s*(\/images\/[^\s#]\S+)\s*([\'"][^>]*?>)/',
+			function($matchs) use ($baseurl) {
+				$url = $baseurl . $matchs[2];
+				return "${matchs[1]}$url${matchs[3]}";
+			},
+			$content
+		);
+
+		$content = preg_replace_callback(
+			'/(<a [^>]*?href=[\'"])\s*(\/images\/[^\s#]\S+)\s*([\'"][^>]*?>)/',
+			function($matchs) use ($baseurl) {
+				$url = $baseurl . $matchs[2];
+				return "${matchs[1]}$url${matchs[3]}";
+			},
+			$content
+		);
+		return $content;
 	}
 
 	/**

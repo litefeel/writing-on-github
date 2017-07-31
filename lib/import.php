@@ -161,6 +161,12 @@ class Writing_On_GitHub_Import {
 				continue;
 			}
 
+
+			if ( $this->importable_raw_file($blob) ) {
+				$this->import_raw_file($blob);
+				continue;
+			}
+
 			if ( ! $this->importable_blob($blob) ) {
 				continue;
 			}
@@ -219,7 +225,8 @@ class Writing_On_GitHub_Import {
 
 		// only _pages and _posts
 		if ( strncasecmp($file->path, '_pages/', strlen('_pages/') ) != 0 &&
-			 strncasecmp($file->path, '_posts/', strlen('_posts/') ) != 0 ) {
+			 strncasecmp($file->path, '_posts/', strlen('_posts/') ) != 0 &&
+			 strncasecmp($file->path, 'images/', strlen('images/') ) != 0 ) {
 			return false;
 		}
 
@@ -256,6 +263,38 @@ class Writing_On_GitHub_Import {
 		}
 
 		return true;
+	}
+
+	protected function importable_raw_file( Writing_On_GitHub_Blob $blob ) {
+		error_log("importable_raw_file");
+		if ( $blob->has_frontmatter() ) {
+			return false;
+		}
+
+		// only images
+		if ( strncasecmp($blob->path(), 'images/', strlen('images/') ) != 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Imports a raw file content into file system.
+	 * @param  Writing_On_GitHub_Blob $blob
+	 */
+	protected function import_raw_file( Writing_On_GitHub_Blob $blob ) {
+		error_log("import_raw_file");
+		$arr = wp_upload_dir();
+		$path = $arr['basedir'] . '/writing-on-github/' . $blob->path();
+		$dirname = dirname($path);
+		if ( ! file_exists($dirname)) {
+			wp_mkdir_p($dirname);
+		}
+
+		error_log("path=" . $path);
+		file_put_contents($path, $blob->content());
+
 	}
 
 	/**
