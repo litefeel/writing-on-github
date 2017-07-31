@@ -374,15 +374,15 @@ class Writing_On_GitHub_Post {
 		}
 
 		//convert traditional post_meta values, hide hidden values, skip already populated values
-		foreach ( get_post_custom( $this->id ) as $key => $value ) {
+		// foreach ( get_post_custom( $this->id ) as $key => $value ) {
 
-			if ( '_' === substr( $key, 0, 1 ) || isset( $meta[ $key ] ) ) {
-				continue;
-			}
+		// 	if ( '_' === substr( $key, 0, 1 ) || isset( $meta[ $key ] ) ) {
+		// 		continue;
+		// 	}
 
-			$meta[ $key ] = $value;
+		// 	$meta[ $key ] = $value;
 
-		}
+		// }
 
 		return apply_filters( 'wogh_post_meta', $meta, $this );
 	}

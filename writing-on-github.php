@@ -172,8 +172,8 @@ class Writing_On_GitHub {
 		add_action( 'wogh_import', array( $this->controller, 'import_master' ), 10, 1 );
 		add_filter( 'get_edit_post_link', array( $this, 'edit_post_link' ), 10, 3 );
 
-		add_filter( 'wogh_post_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
-		add_filter( 'wogh_pre_import_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
+		// add_filter( 'wogh_post_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
+		// add_filter( 'wogh_pre_import_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
 		add_filter( 'the_content', array( $this, 'the_content' ) );
 
 		do_action( 'wogh_boot', $this );
