@@ -84,13 +84,13 @@ class Writing_On_GitHub_Admin {
 			)
 		);
 
-		register_setting( Writing_On_GitHub::$text_domain, 'wogh_ignore_metas' );
-		add_settings_field( 'wogh_ignore_metas', __( 'Ignore post metas', 'writing-on-github' ), array( &$this, 'textarea_field_callback' ), Writing_On_GitHub::$text_domain, 'general', array(
-				'default'   => '',
-				'name'      => 'wogh_ignore_metas',
-				'help_text' => __( 'These meta keys will be ignored and cannot be imported and exported. One meta key per line.', 'writing-on-github' ),
-			)
-		);
+		// register_setting( Writing_On_GitHub::$text_domain, 'wogh_ignore_metas' );
+		// add_settings_field( 'wogh_ignore_metas', __( 'Ignore post metas', 'writing-on-github' ), array( &$this, 'textarea_field_callback' ), Writing_On_GitHub::$text_domain, 'general', array(
+		// 		'default'   => '',
+		// 		'name'      => 'wogh_ignore_metas',
+		// 		'help_text' => __( 'These meta keys will be ignored and cannot be imported and exported. One meta key per line.', 'writing-on-github' ),
+		// 	)
+		// );
 	}
 
 	/**
