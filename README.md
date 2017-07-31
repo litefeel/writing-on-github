@@ -79,6 +79,16 @@ Writing On GitHub exports all posts as `.md` files for better display on GitHub,
 
 You can also activate the Markdown module from [Jetpack](https://wordpress.org/plugins/jetpack/) or the standalone [JP Markdown](https://wordpress.org/plugins/jetpack-markdown/) to save in Markdown and export that version to GitHub.
 
+### GitHub directory structure ###
+
+.
+├── _pages
+|   └── 2007-10-29-some-pages.md
+├── _posts
+|   └── 2009-04-26-some-posts.md
+└── images
+    └── some-images # copy all files (include subdirectory) to wordpress
+
 ### Importing from GitHub ###
 
 Writing On GitHub is also capable of importing posts directly from GitHub, without creating them in WordPress before hand. In order to have your post imported into GitHub, add this YAML Frontmatter to the top of your .md document:

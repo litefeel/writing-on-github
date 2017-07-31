@@ -1,5 +1,10 @@
 ## Changelog ##
 
+### [1.4][1.4] ###
+
+* Ignore custom post meta
+* copy image files from /images/* to wp-content/uploads/writing-on-github/images/*
+
 ### [1.3][1.3] ###
 
 * Fixed backslash loss
@@ -23,3 +28,4 @@
   [1.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.1
   [1.2]: https://github.com/litefeel/writing-on-github/releases/tag/1.2
   [1.3]: https://github.com/litefeel/writing-on-github/releases/tag/1.3
+  [1.4]: https://github.com/litefeel/writing-on-github/releases/tag/1.4
