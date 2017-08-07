@@ -163,6 +163,7 @@ class Writing_On_GitHub_Database {
 			unset( $meta['post_date'] );
 			unset( $meta['post_excerpt'] );
 			unset( $meta['permalink'] );
+			unset( $meta['link'] );
 
 			foreach ( $meta as $key => $value ) {
 				update_post_meta( $post_id, $key, $value );

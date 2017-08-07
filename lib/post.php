@@ -360,17 +360,21 @@ class Writing_On_GitHub_Post {
 		$meta = array(
 			'ID'           => $this->id,
 			'post_title'   => get_the_title( $this->post ),
+			'post_name'    => $this->post->post_name,
 			'author'       => ( $author = get_userdata( $this->post->post_author ) ) ? $author->display_name : '',
 			'post_date'    => $this->post->post_date,
 			'post_excerpt' => $this->post->post_excerpt,
 			'layout'       => get_post_type( $this->post ),
-			'permalink'    => get_permalink( $this->post ),
+			'link'		   => get_permalink( $this->post ),
 			'published'    => 'publish' === $this->status() ? true : false,
 			'tags'         => wp_get_post_tags( $this->id, array( 'fields' => 'names' ) ),
 			'categories'   => wp_get_post_categories( $this->id, array( 'fields' => 'names' ) )
 		);
-		if ( !empty($this->post->post_name) ) {
-			$meta['post_name'] = $this->post->post_name;
+		if ( empty($this->post->post_name) ) {
+			unset($meta['post_name']);
+		}
+		if ( empty($this->post->post_excerpt) ) {
+			unset($meta['post_excerpt']);
 		}
 
 		//convert traditional post_meta values, hide hidden values, skip already populated values

@@ -152,9 +152,9 @@ class Writing_On_GitHub_Blob {
 			array_pop( $matches );
 
 			$meta = spyc_load( $matches[2] );
-			if ( isset( $meta['permalink'] ) ) {
-				$meta['permalink'] = str_replace( home_url(), '', $meta['permalink'] );
-			}
+			// if ( isset( $meta['link'] ) ) {
+			// 	$meta['link'] = str_replace( home_url(), '', $meta['link'] );
+			// }
 		}
 
 		return $meta;
