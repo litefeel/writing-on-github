@@ -1,5 +1,10 @@
 ## Changelog ##
 
+### [1.5][1.5] ###
+
+* Add an option to ignore the author
+* Change permalink to link in frontmatter
+
 ### [1.4][1.4] ###
 
 * Ignore custom post meta
@@ -29,3 +34,4 @@
   [1.2]: https://github.com/litefeel/writing-on-github/releases/tag/1.2
   [1.3]: https://github.com/litefeel/writing-on-github/releases/tag/1.3
   [1.4]: https://github.com/litefeel/writing-on-github/releases/tag/1.4
+  [1.5]: https://github.com/litefeel/writing-on-github/releases/tag/1.5
