@@ -84,6 +84,14 @@ class Writing_On_GitHub_Admin {
 			)
 		);
 
+        register_setting( Writing_On_GitHub::$text_domain, 'wogh_ignore_author' );
+        add_settings_field( 'wogh_ignore_author', __( 'Ignore author', 'writing-on-github' ), array( &$this, 'checkbox_field_callback' ), Writing_On_GitHub::$text_domain, 'general', array(
+                'default'   => '',
+                'name'      => 'wogh_ignore_author',
+                'help_text' => __( 'Do not export author and do not use author info from GitHub', 'writing-on-github' ),
+            )
+        );
+
 		// register_setting( Writing_On_GitHub::$text_domain, 'wogh_ignore_metas' );
 		// add_settings_field( 'wogh_ignore_metas', __( 'Ignore post metas', 'writing-on-github' ), array( &$this, 'textarea_field_callback' ), Writing_On_GitHub::$text_domain, 'general', array(
 		// 		'default'   => '',
@@ -119,6 +127,15 @@ class Writing_On_GitHub_Admin {
 	public function textarea_field_callback( $args ) {
 		include dirname( dirname( __FILE__ ) ) . '/views/textarea-setting-field.php';
 	}
+
+    /**
+     * Callback to render the checkbox field.
+     *
+     * @param array $args Field arguments.
+     */
+    public function checkbox_field_callback( $args ) {
+        include dirname( dirname( __FILE__ ) ) . '/views/checkbox-setting-field.php';
+    }
 
 	/**
 	 * Displays settings messages from background processes

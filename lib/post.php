@@ -376,6 +376,9 @@ class Writing_On_GitHub_Post {
 		if ( empty($this->post->post_excerpt) ) {
 			unset($meta['post_excerpt']);
 		}
+        if ( 'yes' == get_option('wogh_ignore_author') ) {
+            unset($meta['author']);
+        }
 
 		//convert traditional post_meta values, hide hidden values, skip already populated values
 		// foreach ( get_post_custom( $this->id ) as $key => $value ) {
