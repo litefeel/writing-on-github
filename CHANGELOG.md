@@ -4,6 +4,7 @@
 
 * Add an option to ignore the author
 * Change permalink to link in frontmatter
+* Change export github commit message
 
 ### [1.4][1.4] ###
 
