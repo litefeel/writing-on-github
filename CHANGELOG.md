@@ -3,6 +3,7 @@
 ### [1.5][1.5] ###
 
 * Add an option to ignore the author
+* Add an option to force export to github
 * Change permalink to link in frontmatter
 * Change export github commit message
 
