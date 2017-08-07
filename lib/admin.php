@@ -88,7 +88,7 @@ class Writing_On_GitHub_Admin {
         add_settings_field( 'wogh_ignore_author', __( 'Ignore author', 'writing-on-github' ), array( &$this, 'checkbox_field_callback' ), Writing_On_GitHub::$text_domain, 'general', array(
                 'default'   => '',
                 'name'      => 'wogh_ignore_author',
-                'help_text' => __( 'Do not export author and do not use author info from GitHub', 'writing-on-github' ),
+                'help_text' => __( 'Do not export author and do not use author info from GitHub.', 'writing-on-github' ),
             )
         );
 
