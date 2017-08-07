@@ -154,7 +154,7 @@ class Writing_On_GitHub_Export {
 			$message = apply_filters(
 				'wogh_commit_msg_move_post',
 				sprintf(
-					'Moving %s to %s via WordPress at %s (%s)',
+					'Move %s to %s via WordPress at %s (%s)',
 					$old_github_path, $github_path,
 					site_url(),
 					get_bloginfo( 'name' )
@@ -175,7 +175,7 @@ class Writing_On_GitHub_Export {
 			$message = apply_filters(
 				'wogh_commit_msg_new_post',
 				sprintf(
-					'Creating new posts %s from WordPress at %s (%s)',
+					'Create new post %s from WordPress at %s (%s)',
 					$github_path,
 					site_url(),
 					get_bloginfo( 'name' )
@@ -190,7 +190,7 @@ class Writing_On_GitHub_Export {
 			$message = apply_filters(
 				'wogh_commit_msg_update_post',
 				sprintf(
-					'Creating new posts %s from WordPress at %s (%s)',
+					'Update post %s from WordPress at %s (%s)',
 					$github_path,
 					site_url(),
 					get_bloginfo( 'name' )
