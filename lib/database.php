@@ -42,9 +42,10 @@ class Writing_On_GitHub_Database {
 	/**
 	 * Queries the database for all of the supported posts.
 	 *
-	 * @return Writing_On_GitHub_Post[]|WP_Error
-	 */
-	public function fetch_all_supported() {
+     * @param  bool $force
+     * @return Writing_On_GitHub_Post[]|WP_Error
+     */
+	public function fetch_all_supported( bool $force = false ) {
 		$args  = array(
 			'post_type'   => $this->get_whitelisted_post_types(),
 			'post_status' => $this->get_whitelisted_post_statuses(),
@@ -66,7 +67,7 @@ class Writing_On_GitHub_Database {
 		$results = array();
 		foreach ( $post_ids as $post_id ) {
 			// Do not export posts that have already been exported
-			if ( ! get_post_meta( $post_id, '_wogh_sha', true ) ||
+			if ( $force || ! get_post_meta( $post_id, '_wogh_sha', true ) ||
 				 ! get_post_meta( $post_id, '_wogh_github_path', true) ) {
 
 				$results[] = new Writing_On_GitHub_Post( $post_id, $this->app->api() );

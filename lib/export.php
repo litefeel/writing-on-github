@@ -31,33 +31,31 @@ class Writing_On_GitHub_Export {
 	 *
 	 * @return string|WP_Error
 	 */
-	public function full() {
-		$posts = $this->app->database()->fetch_all_supported();
+	public function full( bool $force_all = false ) {
+		$posts = $this->app->database()->fetch_all_supported($force_all);
 
 		if ( is_wp_error( $posts ) ) {
 			return $posts;
 		}
 
-		$result = $this->new_posts($posts);
+        $error = false;
 
-		// $master->set_message(
-		// 	apply_filters(
-		// 		'wogh_commit_msg_full',
-		// 		sprintf(
-		// 			'Full export from WordPress at %s (%s)',
-		// 			site_url(),
-		// 			get_bloginfo( 'name' )
-		// 		)
-		// 	) . $this->get_commit_msg_tag()
-		// );
+        foreach ( $posts as $post ) {
+            $result = $this->update( $post->id() );
+            if ( is_wp_error( $result ) ) {
+                if ( $error ) {
+                    $error->add( $result->get_error_code(), $result->get_error_message() );
+                } else {
+                    $error = $result;
+                }
+            }
+        }
 
-		// $result = $this->app->api()->persist()->commit( $master );
+        if ( is_wp_error( $error ) ) {
+            return $error;
+        }
 
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
-		return __( 'Export to GitHub completed successfully.', 'writing-on-github' );
+        return __( 'Export to GitHub completed successfully.', 'writing-on-github' );
 	}
 
 

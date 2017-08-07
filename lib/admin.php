@@ -221,6 +221,10 @@ class Writing_On_GitHub_Admin {
 			Writing_On_GitHub::$instance->start_export();
 		}
 
+        if ( 'force_export' === $_GET['action'] ) {
+            Writing_On_GitHub::$instance->start_export(true);
+        }
+
 		if ( 'import' === $_GET['action'] ) {
 			Writing_On_GitHub::$instance->start_import();
 		}

@@ -128,7 +128,7 @@ class Writing_On_GitHub_Controller {
 	 *
 	 * @return boolean
 	 */
-	public function export_all( $user_id ) {
+	public function export_all( $user_id, bool $force = false ) {
 		if ( ! $this->app->semaphore()->is_open() ) {
 			return $this->app->response()->error( new WP_Error(
 				'semaphore_locked',
@@ -142,7 +142,7 @@ class Writing_On_GitHub_Controller {
 			wp_set_current_user( $user_id );
 		}
 
-		$result = $this->app->export()->full();
+		$result = $this->app->export()->full($force);
 		$this->app->semaphore()->unlock();
 
 		// Maybe move option updating out of this class/upgrade message display?

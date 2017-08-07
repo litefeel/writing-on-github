@@ -22,6 +22,9 @@
 					<a href="<?php echo esc_url( add_query_arg( array( 'action' => 'export' ) ) ); ?>">
 						<?php esc_html_e( 'Export to GitHub', 'writing-on-github' ); ?>
 					</a> |
+                    <a href="<?php echo esc_url( add_query_arg( array( 'action' => 'force_export' ) ) ); ?>">
+                        <?php esc_html_e( 'Force export to GitHub', 'writing-on-github' ); ?>
+                    </a> |
 					<a href="<?php echo esc_url( add_query_arg( array( 'action' => 'import' ) ) ); ?>">
 						<?php esc_html_e( 'Import from GitHub', 'writing-on-github' ); ?>
 					</a>
