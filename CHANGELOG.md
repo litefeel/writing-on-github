@@ -1,5 +1,9 @@
 ## Changelog ##
 
+### [1.5.1][1.5.1] ###
+
+* Compatible with PHP5.0
+
 ### [1.5][1.5] ###
 
 * Add an option to ignore the author
@@ -37,3 +41,4 @@
   [1.3]: https://github.com/litefeel/writing-on-github/releases/tag/1.3
   [1.4]: https://github.com/litefeel/writing-on-github/releases/tag/1.4
   [1.5]: https://github.com/litefeel/writing-on-github/releases/tag/1.5
+  [1.5.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.5.1

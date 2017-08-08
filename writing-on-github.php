@@ -3,7 +3,7 @@
  * Plugin Name: Writing on GitHub
  * Plugin URI: https://github.com/litefeel/writing-on-github
  * Description: A WordPress plugin to allow you writing on GitHub (or Jekyll site).
- * Version: 1.5
+ * Version: 1.5.1
  * Author:  litefeel
  * Author URI: https://www.litefeel.com
  * License: GPLv2
@@ -56,12 +56,6 @@ class Writing_On_GitHub {
 	 * @var string
 	 */
 	public static $text_domain = 'writing-on-github';
-
-	/**
-	 * Current version
-	 * @var string
-	 */
-	public static $version = '1.5';
 
 	/**
 	 * Controller object
