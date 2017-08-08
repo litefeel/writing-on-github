@@ -1,0 +1,35 @@
+{
+  "name": "litefeel/writing-on-github",
+  "description": "A WordPress plugin to allow you writing on GitHub (or Jekyll site).",
+  "type": "wordpress-plugin",
+  "minimum-stability": "stable",
+  "license": "GPL",
+  "authors": [
+    {
+      "name": "litefeel",
+      "email": "litefeel@gmail.com"
+    }
+  ],
+  "autoload": {
+    "classmap": ["lib/"]
+  },
+  "autoload-dev": {
+    "classmap": ["tests/"]
+  },
+  "require": {
+    "php": ">=5.3",
+    "mustangostang/spyc": "^0.6.1"
+  },
+  "require-dev": {
+    "jdgrimes/wp-http-testcase": "1.3.1",
+    "mockery/mockery": "0.9.3",
+    "phpunit/phpunit": "^4.8",
+    "wp-coding-standards/wpcs": "0.7.1",
+    "squizlabs/php_codesniffer": "~2.3"
+  },
+  "scripts": {
+    "sniff": "phpcs --runtime-set installed_paths vendor/wp-coding-standards/wpcs -p ./ --standard=WordPress --report=full --extensions=php --ignore=*/tests/*,*/vendor/*",
+    "clean": "phpcbf --runtime-set installed_paths vendor/wp-coding-standards/wpcs -p ./ --standard=WordPress --report=full --extensions=php --ignore=*/tests/*,*/vendor/*",
+    "test": "phpunit"
+  }
+}
