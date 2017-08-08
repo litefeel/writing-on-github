@@ -53,8 +53,6 @@ script:
 - phpunit
 - git clone https://github.com/litefeel/deploy2wp.git
 - sh deploy2wp/scripts/install.sh
-- deploy2wp/scripts/wp2md.sh README.md readme.txt to-wp
-- cat readme.txt
 
 after_success:
 - deploy2wp/scripts/deploy2wp.sh
