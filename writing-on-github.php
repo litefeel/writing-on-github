@@ -442,8 +442,9 @@ class Writing_On_GitHub {
 	/**
 	 * Kicks of an import or export cronjob.
 	 *
-	 * @param $type
-	 */
+     * @param bool   $force
+     * @param string $type
+     */
 	protected function start_cron( $type, $force = false ) {
 		update_option( '_wogh_' . $type . '_started', 'yes' );
 		$user_id = get_current_user_id();

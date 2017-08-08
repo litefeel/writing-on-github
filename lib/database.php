@@ -45,7 +45,7 @@ class Writing_On_GitHub_Database {
      * @param  bool $force
      * @return Writing_On_GitHub_Post[]|WP_Error
      */
-	public function fetch_all_supported( bool $force = false ) {
+	public function fetch_all_supported( $force = false ) {
 		$args  = array(
 			'post_type'   => $this->get_whitelisted_post_types(),
 			'post_status' => $this->get_whitelisted_post_statuses(),

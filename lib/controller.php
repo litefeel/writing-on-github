@@ -126,9 +126,11 @@ class Writing_On_GitHub_Controller {
 	/**
 	 * Export all the posts in the database to GitHub.
 	 *
-	 * @return boolean
-	 */
-	public function export_all( $user_id, bool $force = false ) {
+     * @param  int        $user_id
+     * @param  boolean    $force
+     * @return boolean
+     */
+	public function export_all( $user_id, $force = false ) {
 		if ( ! $this->app->semaphore()->is_open() ) {
 			return $this->app->response()->error( new WP_Error(
 				'semaphore_locked',

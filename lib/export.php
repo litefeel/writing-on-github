@@ -29,9 +29,10 @@ class Writing_On_GitHub_Export {
 	/**
 	 * Updates all of the current posts in the database on master.
 	 *
-	 * @return string|WP_Error
-	 */
-	public function full( bool $force_all = false ) {
+     * @param  bool    $force_all
+     * @return string|WP_Error
+     */
+	public function full( $force_all = false ) {
 		$posts = $this->app->database()->fetch_all_supported($force_all);
 
 		if ( is_wp_error( $posts ) ) {
