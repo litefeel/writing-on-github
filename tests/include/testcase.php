@@ -68,11 +68,6 @@ abstract class Writing_On_GitHub_TestCase extends WP_HTTP_TestCase {
 	protected $blob;
 
 	/**
-	 * @var Writing_On_GitHub_Cache|Mockery\Mock
-	 */
-	protected $api_cache;
-
-	/**
 	 * @var Writing_On_GitHub_Fetch_Client|Mockery\Mock
 	 */
 	protected $fetch;
@@ -99,7 +94,6 @@ abstract class Writing_On_GitHub_TestCase extends WP_HTTP_TestCase {
 		$this->database   = Mockery::mock( 'Writing_On_GitHub_Database' );
 		$this->post       = Mockery::mock( 'Writing_On_GitHub_Post' );
 		$this->blob       = Mockery::mock( 'Writing_On_GitHub_Blob' );
-		$this->api_cache  = Mockery::mock( 'Writing_On_GitHub_Cache' );
 		$this->fetch      = Mockery::mock( 'Writing_On_GitHub_Fetch_Client' );
 		$this->persist    = Mockery::mock( 'Writing_On_GitHub_Persist_Client' );
 
@@ -136,10 +130,6 @@ abstract class Writing_On_GitHub_TestCase extends WP_HTTP_TestCase {
 		$this->app
 			->shouldReceive( 'blob' )
 			->andReturn( $this->blob )
-			->byDefault();
-		$this->app
-			->shouldReceive( 'cache' )
-			->andReturn( $this->api_cache )
 			->byDefault();
 		$this->api
 			->shouldReceive( 'fetch' )

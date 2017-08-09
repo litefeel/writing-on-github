@@ -19,7 +19,6 @@ if ( defined( 'WRITING_ON_GITHUB_TEST' ) && WRITING_ON_GITHUB_TEST ) {
 
 
 // require_once(dirname(__FILE__) . '/Spyc.php');
-require_once(dirname(__FILE__) . '/lib/cache.php');
 require_once(dirname(__FILE__) . '/lib/database.php');
 require_once(dirname(__FILE__) . '/lib/admin.php');
 require_once(dirname(__FILE__) . '/lib/payload.php');
@@ -124,13 +123,6 @@ class Writing_On_GitHub {
 	 * @var Writing_On_GitHub_Database
 	 */
 	protected $database;
-
-	/**
-	 * Cache object.
-	 *
-	 * @var Writing_On_GitHub_Cache
-	 */
-	protected $cache;
 
 	/**
 	 * Called at load time, hooks into WP core
@@ -394,19 +386,6 @@ class Writing_On_GitHub {
 		}
 
 		return $this->database;
-	}
-
-	/**
-	 * Lazy-load the Cache object.
-	 *
-	 * @return Writing_On_GitHub_Cache
-	 */
-	public function cache() {
-		if ( ! $this->cache ) {
-			$this->cache = new Writing_On_GitHub_Cache;
-		}
-
-		return $this->cache;
 	}
 
 	/**

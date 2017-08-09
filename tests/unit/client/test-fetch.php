@@ -10,10 +10,6 @@ class Writing_On_GitHub_Fetch_Client_Test extends Writing_On_GitHub_Base_Client_
         parent::setUp();
 
         $this->fetch = new Writing_On_GitHub_Fetch_Client( $this->app );
-        $this->api_cache
-            ->shouldReceive( 'fetch_blob' )
-            ->andReturn( false )
-            ->byDefault();
     }
 
     public function test_should_fail_if_missing_token() {
@@ -50,26 +46,6 @@ class Writing_On_GitHub_Fetch_Client_Test extends Writing_On_GitHub_Base_Client_
         $this->assertInstanceOf( 'WP_Error', $error = $this->fetch->tree_recursive() );
         $this->assertSame( '422_unprocessable_entity', $error->get_error_code() );
     }
-
-    // public function test_should_return_commit_with_blobs_from_cache() {
-    //  $this->set_get_trees( true, 'master' );
-    //  $this->set_get_blobs( true );
-    //  $this->api_cache
-    //      ->shouldReceive( 'fetch_blob' )
-    //      ->times( 3 )
-    //      ->with( Mockery::anyOf(
-    //          '9fa5c7537f8582b71028ff34b8c20dfd0f3b2a25',
-    //          '8d9b2e6fd93761211dc03abd71f4a9189d680fd0',
-    //          '2d73165945b0ccbe4932f1363457986b0ed49f19'
-    //      ) )
-    //      ->andReturn( $this->blob );
-
-    //  $this->assertCount( 3, $files = $this->fetch->tree_recursive() );
-
-    //  foreach ( $files as $file ) {
-    //      $this->assertSame( $this->blob, $this->fetch->blob( $file ) );
-    //  }
-    // }
 
     public function test_should_return_commit_with_no_blobs_if_api_fails() {
         $this->set_get_trees( true, 'master' );
