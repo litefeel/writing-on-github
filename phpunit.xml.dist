@@ -12,11 +12,13 @@
 		</testsuite>
 	</testsuites>
 	<filter>
-		<blacklist>
-			<directory>/tmp/wordpress*</directory>
-			<directory>./vendor/</directory>
-			<directory>./tests/</directory>
-		</blacklist>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">.</directory>
+			<exclude>
+				<directory>./vendor/</directory>
+				<directory>./tests/</directory>
+			</exclude>
+		</whitelist>
 	</filter>
 	<logging>
 		<log type="tap" target="build/report.tap"/>
