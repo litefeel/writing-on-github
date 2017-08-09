@@ -17,6 +17,7 @@
 			<exclude>
 				<directory>./vendor/</directory>
 				<directory>./tests/</directory>
+				<file>./lib/cli.php</file>
 			</exclude>
 		</whitelist>
 	</filter>
