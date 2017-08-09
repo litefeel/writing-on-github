@@ -12,33 +12,10 @@
 
 // If the functions have already been autoloaded, don't reload.
 // This fixes function duplication during unit testing.
-if ( defined( 'WRITING_ON_GITHUB_TEST' ) && WRITING_ON_GITHUB_TEST ) {
-	$path = dirname( __FILE__ ) . '/vendor/autoload.php';
-	include_once $path;
+$path = dirname( __FILE__ ) . '/vendor/autoload.php';
+if ( file_exists( $path ) ) {
+    require_once( $path );
 }
-
-
-// require_once(dirname(__FILE__) . '/Spyc.php');
-require_once(dirname(__FILE__) . '/lib/database.php');
-require_once(dirname(__FILE__) . '/lib/admin.php');
-require_once(dirname(__FILE__) . '/lib/payload.php');
-require_once(dirname(__FILE__) . '/lib/post.php');
-// require_once(dirname(__FILE__) . '/lib/cli.php');
-require_once(dirname(__FILE__) . '/lib/controller.php');
-require_once(dirname(__FILE__) . '/lib/export.php');
-require_once(dirname(__FILE__) . '/lib/semaphore.php');
-require_once(dirname(__FILE__) . '/lib/request.php');
-require_once(dirname(__FILE__) . '/lib/client/base.php');
-require_once(dirname(__FILE__) . '/lib/client/fetch.php');
-require_once(dirname(__FILE__) . '/lib/client/persist.php');
-require_once(dirname(__FILE__) . '/lib/import.php');
-require_once(dirname(__FILE__) . '/lib/api.php');
-require_once(dirname(__FILE__) . '/lib/fileinfo.php');
-require_once(dirname(__FILE__) . '/lib/blob.php');
-require_once(dirname(__FILE__) . '/lib/response.php');
-// require_once(dirname(__FILE__) . '/views/setting-field.php');
-// require_once(dirname(__FILE__) . '/views/options.php');
-// require_once(dirname(__FILE__) . '/views/user-setting-field.php');
 
 add_action( 'plugins_loaded', array( new Writing_On_GitHub, 'boot' ) );
 
