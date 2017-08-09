@@ -26,11 +26,17 @@ allow_failures:
 
 before_script:
 - |
-  # Remove Xdebug for a huge performance increase:
-  if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
-    phpenv config-rm xdebug.ini
-  else
-    echo "xdebug.ini does not exist"
+  if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then
+    export PHP56=1
+  fi
+- |
+  if [[ -z "$PHP56" ]]; then
+    # Remove Xdebug for a huge performance increase:
+    if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
+      phpenv config-rm xdebug.ini
+    else
+      echo "xdebug.ini does not exist"
+    fi
   fi
 - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
 - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -48,11 +54,20 @@ before_script:
 - phpenv versions
 - php --version
 
+
 script:
 #  - phpcs --standard=phpcs.ruleset.xml $(find . -name '*.php')
-- phpunit
+- ./vendor/bin/phpunit --coverage-clover=coverage.clover
+- if [[ -n "$PHP56" ]]; then cat coverage.clover; fi
 - git clone https://github.com/litefeel/deploy2wp.git
 - sh deploy2wp/scripts/install.sh
+
+after_script:
+- |
+  if [[ -n "$PHP56" ]]; then
+    wget https://scrutinizer-ci.com/ocular.phar
+    php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  fi
 
 after_success:
 - deploy2wp/scripts/deploy2wp.sh
