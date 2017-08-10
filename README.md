@@ -1,4 +1,8 @@
 # Writing On GitHub #
+
+[![Build Status](https://travis-ci.org/litefeel/writing-on-github.svg?branch=master)](https://travis-ci.org/litefeel/writing-on-github)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/litefeel/writing-on-github/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/litefeel/writing-on-github/?branch=master)
+
 **Contributors:** litefeel  
 **Tags:** github, git, version control, content, collaboration, publishing  
 **Donate link:** https://www.paypal.me/litefeel  
