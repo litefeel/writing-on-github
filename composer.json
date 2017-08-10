@@ -11,7 +11,8 @@
     }
   ],
   "autoload": {
-    "classmap": ["lib/"]
+    "classmap": ["lib/"],
+    "files": ["lib/function.php"]
   },
   "autoload-dev": {
     "classmap": ["tests/"]

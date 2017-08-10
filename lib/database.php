@@ -43,6 +43,7 @@ class Writing_On_GitHub_Database {
 	 * Queries the database for all of the supported posts.
 	 *
      * @param  bool $force
+     *
      * @return Writing_On_GitHub_Post[]|WP_Error
      */
 	public function fetch_all_supported( $force = false ) {
@@ -64,11 +65,12 @@ class Writing_On_GitHub_Database {
 			);
 		}
 
+        /* @var Writing_On_GitHub_Post[] $results */
 		$results = array();
 		foreach ( $post_ids as $post_id ) {
 			// Do not export posts that have already been exported
 			if ( $force || ! get_post_meta( $post_id, '_wogh_sha', true ) ||
-				 ! get_post_meta( $post_id, '_wogh_github_path', true) ) {
+				 ! get_post_meta( $post_id, '_wogh_github_path', true ) ) {
 
 				$results[] = new Writing_On_GitHub_Post( $post_id, $this->app->api() );
 			}
@@ -108,7 +110,6 @@ class Writing_On_GitHub_Database {
 	 * and associates their author as well as their latest
 	 *
 	 * @param Writing_On_GitHub_Post[] $posts Array of Posts to save.
-	 * @param string                       $email Author email.
 	 *
 	 * @return string|WP_Error
 	 */
@@ -124,24 +125,19 @@ class Writing_On_GitHub_Database {
 		foreach ( $posts as $post ) {
 			$args = apply_filters( 'wogh_pre_import_args', $this->post_args( $post ), $post );
 
-			remove_filter('content_save_pre', 'wp_filter_post_kses');
+			remove_filter( 'content_save_pre', 'wp_filter_post_kses' );
 			$post_id = $post->is_new() ?
 				wp_insert_post( $args, true ) :
 				wp_update_post( $args, true );
-			add_filter('content_save_pre', 'wp_filter_post_kses');
+			add_filter( 'content_save_pre', 'wp_filter_post_kses' );
 
 			if ( is_wp_error( $post_id ) ) {
-				if ( ! $error ) {
-					$error = $post_id;
-				} else {
-					$error->add( $post_id->get_error_code(), $post_id->get_error_message() );
-				}
+                /* @var WP_Error $post_id */
+                $error = wogh_append_error( $error, $post_id );
 
 				// Abort saving if updating the post fails.
 				continue;
 			}
-
-			// $this->set_revision_author( $post_id, $user_id );
 
 			if ( $post->is_new() ) {
 				$author = false;
@@ -150,7 +146,7 @@ class Writing_On_GitHub_Database {
 					$author = $meta['author'];
 				}
 				$user    = $this->fetch_commit_user( $author );
-				$user_id = ! is_wp_error( $user ) ? $user->ID : 0;
+				$user_id = is_wp_error( $user ) ? 0 : $user->ID;
 				$this->set_post_author( $post_id, $user_id );
 			}
 
@@ -158,17 +154,17 @@ class Writing_On_GitHub_Database {
 
 			$meta = apply_filters( 'wogh_pre_import_meta', $post->get_meta(), $post );
 
-			unset( $meta['tags'] );
-			unset( $meta['categories'] );
-			unset( $meta['author'] );
-			unset( $meta['post_date'] );
-			unset( $meta['post_excerpt'] );
-			unset( $meta['permalink'] );
-			unset( $meta['link'] );
+			// unset( $meta['tags'] );
+			// unset( $meta['categories'] );
+			// unset( $meta['author'] );
+			// unset( $meta['post_date'] );
+			// unset( $meta['post_excerpt'] );
+			// unset( $meta['permalink'] );
+			// unset( $meta['link'] );
 
-			foreach ( $meta as $key => $value ) {
-				update_post_meta( $post_id, $key, $value );
-			}
+			// foreach ( $meta as $key => $value ) {
+			// 	update_post_meta( $post_id, $key, $value );
+			// }
 		}
 
 		if ( $error ) {
@@ -183,20 +179,20 @@ class Writing_On_GitHub_Database {
 		$meta = $post->get_meta();
 
 		// prevent backslash loss
-		$args['post_content'] = addslashes($args['post_content']);
+		$args['post_content'] = addslashes( $args['post_content'] );
 
 		// update tags
-		if ( isset( $meta['tags'] ) && $meta['tags'] ) {
+		if ( ! empty( $meta['tags'] ) ) {
 		    $args['tags_input'] = $meta['tags'];
 		}
 
 		// update categories
-		if ( isset( $meta['categories'] ) && $meta['categories'] ) {
+		if ( ! empty( $meta['categories'] ) ) {
 		    $categories = $meta['categories'];
-		    if (!is_array($categories)) {
-		        $categories = array($categories);
+		    if ( ! is_array( $categories ) ) {
+		        $categories = array( $categories );
 		    }
-		    $terms = get_terms(array(
+		    $terms = get_terms( array(
 		        'taxonomy' => 'category',
 		        'fields' => 'id=>name',
 		        'hide_empty' => 0,
@@ -204,22 +200,22 @@ class Writing_On_GitHub_Database {
 		        )
 		    );
 		    $map = array();
-		    foreach ($categories as $name) {
+		    foreach ( $categories as $name ) {
 		        $map[$name] = 1;
 		    }
 
 		    $ids = array();
-		    if (!empty($terms)) {
-		        foreach ($terms as $id => $name) {
+		    if ( ! empty( $terms ) ) {
+		        foreach ( $terms as $id => $name ) {
 		            $ids[] = $id;
-		            unset($map[$name]);
+		            unset( $map[$name] );
 		        }
 		    }
 
 		    // create new terms
-		    if (!empty($map)) {
-		        foreach ($map as $name => $value) {
-		            $term = wp_insert_term($name, 'category', array('parent' => 0));
+		    if ( ! empty( $map ) ) {
+		        foreach ( $map as $name => $value ) {
+		            $term = wp_insert_term( $name, 'category', array( 'parent' => 0 ) );
 		            // array('term_id' => $term_id, 'term_taxonomy_id' => $tt_id);
 		            $ids[] = $term['term_id'];
 		        }
@@ -230,6 +226,22 @@ class Writing_On_GitHub_Database {
 
 		return $args;
 	}
+
+    private function get_post_id_by_filename( $filename, $pattern  ) {
+        preg_match( $pattern , $filename, $matches );
+        $title = $matches[4];
+
+        $query = new WP_Query( array(
+            'name'     => $title,
+            'posts_per_page' => 1,
+            'post_type' => $this->get_whitelisted_post_types(),
+            'fields'         => 'ids',
+        ) );
+
+        $post_id = $query->get_posts();
+        $post_id = array_pop( $post_id );
+        return $post_id;
+    }
 
 	/**
 	 * Deletes a post from the database based on its GitHub path.
@@ -256,33 +268,11 @@ class Writing_On_GitHub_Database {
 			$directory = $parts ? array_shift( $parts ) : '';
 
 			if ( false !== strpos( $directory, 'post' ) ) {
-				preg_match( '/([0-9]{4})-([0-9]{2})-([0-9]{2})-(.*)\.md/', $filename, $matches );
-				$title = $matches[4];
-
-				$query = new WP_Query( array(
-					'name'     => $title,
-					'posts_per_page' => 1,
-					'post_type' => $this->get_whitelisted_post_types(),
-					'fields'         => 'ids',
-				) );
-
-				$post_id = $query->get_posts();
-				$post_id = array_pop( $post_id );
+                $post_id = get_post_id_by_filename( $filename, '/([0-9]{4})-([0-9]{2})-([0-9]{2})-(.*)\.md/' );
 			}
 
 			if ( ! $post_id ) {
-				preg_match( '/(.*)\.md/', $filename, $matches );
-				$title = $matches[1];
-
-				$query = new WP_Query( array(
-					'name'     => $title,
-					'posts_per_page' => 1,
-					'post_type' => $this->get_whitelisted_post_types(),
-					'fields'         => 'ids',
-				) );
-
-				$post_id = $query->get_posts();
-				$post_id = array_pop( $post_id );
+                $post_id = get_post_id_by_filename( $filename, '/(.*)\.md/' );
 			}
 		}
 
@@ -456,38 +446,38 @@ class Writing_On_GitHub_Database {
 		return $user;
 	}
 
-	/**
-	 * Sets the author latest revision
-	 * of the provided post ID to the provided user.
-	 *
-	 * @param int $post_id Post ID to update revision author.
-	 * @param int $user_id User ID for revision author.
-	 *
-	 * @return string|WP_Error
-	 */
-	protected function set_revision_author( $post_id, $user_id ) {
-		$revision = wp_get_post_revisions( $post_id );
+	// /**
+	//  * Sets the author latest revision
+	//  * of the provided post ID to the provided user.
+	//  *
+	//  * @param int $post_id Post ID to update revision author.
+	//  * @param int $user_id User ID for revision author.
+	//  *
+	//  * @return string|WP_Error
+	//  */
+	// protected function set_revision_author( $post_id, $user_id ) {
+	// 	$revision = wp_get_post_revisions( $post_id );
 
-		if ( ! $revision ) {
-			$new_revision = wp_save_post_revision( $post_id );
+	// 	if ( ! $revision ) {
+	// 		$new_revision = wp_save_post_revision( $post_id );
 
-			if ( ! $new_revision || is_wp_error( $new_revision ) ) {
-				return new WP_Error( 'db_error', 'There was a problem saving a new revision.' );
-			}
+	// 		if ( ! $new_revision || is_wp_error( $new_revision ) ) {
+	// 			return new WP_Error( 'db_error', 'There was a problem saving a new revision.' );
+	// 		}
 
-			// `wp_save_post_revision` returns the ID, whereas `get_post_revision` returns the whole object
-			// in order to be consistent, let's make sure we have the whole object before continuing.
-			$revision = get_post( $new_revision );
+	// 		// `wp_save_post_revision` returns the ID, whereas `get_post_revision` returns the whole object
+	// 		// in order to be consistent, let's make sure we have the whole object before continuing.
+	// 		$revision = get_post( $new_revision );
 
-			if ( ! $revision ) {
-				return new WP_Error( 'db_error', 'There was a problem retrieving the newly recreated revision.' );
-			}
-		} else {
-			$revision = array_shift( $revision );
-		}
+	// 		if ( ! $revision ) {
+	// 			return new WP_Error( 'db_error', 'There was a problem retrieving the newly recreated revision.' );
+	// 		}
+	// 	} else {
+	// 		$revision = array_shift( $revision );
+	// 	}
 
-		return $this->set_post_author( $revision->ID, $user_id );
-	}
+	// 	return $this->set_post_author( $revision->ID, $user_id );
+	// }
 
 	/**
 	 * Updates the user ID for the provided post ID.
@@ -533,15 +523,15 @@ class Writing_On_GitHub_Database {
 		);
 	}
 
-	/**
-	 * Update the provided post's blob sha.
-	 *
-	 * @param Writing_On_GitHub_Post $post Post to update.
-	 * @param string                     $sha Sha to update to.
-	 *
-	 * @return bool|int
-	 */
-	public function set_post_sha( $post, $sha ) {
-		return update_post_meta( $post->id, '_wogh_sha', $sha );
-	}
+	// *
+	//  * Update the provided post's blob sha.
+	//  *
+	//  * @param Writing_On_GitHub_Post $post Post to update.
+	//  * @param string                     $sha Sha to update to.
+	//  *
+	//  * @return bool|int
+
+	// public function set_post_sha( $post, $sha ) {
+	// 	return update_post_meta( $post->id, '_wogh_sha', $sha );
+	// }
 }

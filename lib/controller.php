@@ -81,6 +81,7 @@ class Writing_On_GitHub_Controller {
 		$this->app->semaphore()->unlock();
 
 		if ( is_wp_error( $result ) ) {
+            /*　@var WP_Error $result */
 			return $this->app->response()->error( $result );
 		}
 
@@ -92,7 +93,7 @@ class Writing_On_GitHub_Controller {
 	 *
 	 * @return boolean
 	 */
-	public function import_master( $user_id ) {
+	public function import_master( $user_id = 0 ) {
 		if ( ! $this->app->semaphore()->is_open() ) {
 			return $this->app->response()->error( new WP_Error(
 				'semaphore_locked',
@@ -112,8 +113,9 @@ class Writing_On_GitHub_Controller {
 
 		$this->app->semaphore()->unlock();
 
-		if ( is_wp_error( $result ) ) {
-			update_option( '_wogh_import_error', $result->get_error_message() );
+        if ( is_wp_error( $result ) ) {
+            /*　@var WP_Error $result */
+            update_option( '_wogh_import_error', $result->get_error_message() );
 
 			return $this->app->response()->error( $result );
 		}
@@ -130,7 +132,7 @@ class Writing_On_GitHub_Controller {
      * @param  boolean    $force
      * @return boolean
      */
-	public function export_all( $user_id, $force = false ) {
+	public function export_all( $user_id = 0, $force = false ) {
 		if ( ! $this->app->semaphore()->is_open() ) {
 			return $this->app->response()->error( new WP_Error(
 				'semaphore_locked',
@@ -149,6 +151,7 @@ class Writing_On_GitHub_Controller {
 
 		// Maybe move option updating out of this class/upgrade message display?
 		if ( is_wp_error( $result ) ) {
+            /*　@var WP_Error $result */
 			update_option( '_wogh_export_error', $result->get_error_message() );
 
 			return $this->app->response()->error( $result );
@@ -186,6 +189,7 @@ class Writing_On_GitHub_Controller {
 		$this->app->semaphore()->unlock();
 
 		if ( is_wp_error( $result ) ) {
+            /*　@var WP_Error $result */
 			return $this->app->response()->error( $result );
 		}
 
@@ -218,6 +222,7 @@ class Writing_On_GitHub_Controller {
 		$this->app->semaphore()->unlock();
 
 		if ( is_wp_error( $result ) ) {
+            /*　@var WP_Error $result */
 			return $this->app->response()->error( $result );
 		}
 

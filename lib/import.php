@@ -26,59 +26,24 @@ class Writing_On_GitHub_Import {
 		$this->app = $app;
 	}
 
-	/**
-	 * Imports a payload.
-	 *
-	 * @param Writing_On_GitHub_Payload $payload GitHub payload object.
-	 *
-	 * @return string|WP_Error
-	 */
-	// public function payload( Writing_On_GitHub_Payload $payload ) {
-	// 	/**
-	// 	 * Whether there's an error during import.
-	// 	 *
-	// 	 * @var false|WP_Error $error
-	// 	 */
-	// 	$error = false;
-
-	// 	$result = $this->commit( $this->app->api()->fetch()->commit( $payload->get_commit_id() ) );
-
-	// 	if ( is_wp_error( $result ) ) {
-	// 		$error = $result;
-	// 	}
-
-	// 	$removed = array();
-	// 	foreach ( $payload->get_commits() as $commit ) {
-	// 		$removed = array_merge( $removed, $commit->removed );
-	// 	}
-	// 	foreach ( array_unique( $removed ) as $path ) {
-	// 		$result = $this->app->database()->delete_post_by_path( $path );
-
-	// 		if ( is_wp_error( $result ) ) {
-	// 			if ( $error ) {
-	// 				$error->add( $result->get_error_code(), $result->get_error_message() );
-	// 			} else {
-	// 				$error = $result;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	if ( $error ) {
-	// 		return $error;
-	// 	}
-
-	// 	return __( 'Payload processed', 'writing-on-github' );
-	// }
-
+    /**
+     * Imports a payload.
+     * @param  Writing_On_GitHub_Payload $payload
+     *
+     * @return string|WP_Error
+     */
 	public function payload( Writing_On_GitHub_Payload $payload ) {
 
 		$result = $this->app->api()->fetch()->compare( $payload->get_before_commit_id() );
 
 		if ( is_wp_error( $result ) ) {
+            /* @var WP_Error $result */
 			return $result;
 		}
 
-		$result = $this->import_files( $result );
+        if ( is_array( $result ) ) {
+            $result = $this->import_files( $result );
+        }
 
 		if ( is_wp_error( $result ) ) {
 			return $files;
@@ -89,8 +54,9 @@ class Writing_On_GitHub_Import {
 
 	/**
 	 * import blob by files
-	 * @param  array $files [Writing_On_GitHub_File_Info]
-	 * @return string|WP_ERROR
+	 * @param  Writing_On_GitHub_File_Info[] $files
+     *
+	 * @return string|WP_Error
 	 */
 	protected function import_files( $files ) {
 
@@ -107,11 +73,8 @@ class Writing_On_GitHub_Import {
 			foreach ($delete_ids as $id) {
 				$result = $this->app->database()->delete_post( $id );
 				if ( is_wp_error( $result ) ) {
-					if ( $error ) {
-						$error->add( $result->get_error_code(), $result->get_error_message() );
-					} else {
-						$error = $result;
-					}
+                    /* @var WP_Error $result */
+                    $error = wogh_append_error( $error, $result );
 				}
 			}
 		}
@@ -128,20 +91,32 @@ class Writing_On_GitHub_Import {
 		$result = $this->app->api()->fetch()->tree_recursive();
 
 		if ( is_wp_error( $result ) ) {
+            /* @var WP_Error $result */
 			return $result;
 		}
 
-		$result = $this->import_files( $result );
+        if ( is_array( $result ) ) {
+            $result = $this->import_files( $result );
+        }
 
 		if ( is_wp_error( $result ) ) {
+            /* @var WP_Error $result */
 			return $result;
 		}
 
 		return __( 'Payload processed', 'writing-on-github' );
 	}
 
+    /**
+     * Do compare
+     * @param  Writing_On_GitHub_File_Info[]|WP_Error $files
+     * @param  int[] &$delete_ids
+     *
+     * @return string|WP_Error
+     */
 	protected function compare( $files, &$delete_ids ) {
 		if ( is_wp_error( $files ) ) {
+            /* @var WP_Error $files */
 			return $files;
 		}
 
@@ -155,19 +130,18 @@ class Writing_On_GitHub_Import {
 				continue;
 			}
 
-			$blob = $this->app->api()->fetch()->blob($file);
+			$blob = $this->app->api()->fetch()->blob( $file );
 			// network error ?
-			if ( is_wp_error($blob) ) {
+			if ( ! $blob instanceof Writing_On_GitHub_Blob ) {
 				continue;
 			}
 
-
-			if ( $this->importable_raw_file($blob) ) {
-				$this->import_raw_file($blob, $file->status == 'removed');
+			if ( $this->importable_raw_file( $blob ) ) {
+				$this->import_raw_file( $blob, $file->status == 'removed' );
 				continue;
 			}
 
-			if ( ! $this->importable_blob($blob) ) {
+			if ( ! $this->importable_blob( $blob ) ) {
 				continue;
 			}
 
@@ -185,13 +159,13 @@ class Writing_On_GitHub_Import {
 			}
 		}
 
-		foreach ($posts as $post) {
-			if ( $post->id() && isset( $idsmap[$post->id()] ) ) {
-				unset( $idsmap[$post->id()] );
+		foreach ( $posts as $post ) {
+			if ( $post->id() && isset( $idsmap[ $post->id() ] ) ) {
+				unset( $idsmap[ $post->id() ] );
 			}
 		}
 		$delete_ids = array();
-		foreach ($idsmap as $id => $value) {
+		foreach ( $idsmap as $id => $value ) {
 			$delete_ids[] = $id;
 		}
 
@@ -203,7 +177,7 @@ class Writing_On_GitHub_Import {
 			return $result;
 		}
 
-		if ( $new ) {
+		if ( ! empty( $new ) ) {
 			$result = $this->app->export()->new_posts( $new );
 
 			if ( is_wp_error( $result ) ) {
@@ -217,7 +191,7 @@ class Writing_On_GitHub_Import {
 	/**
 	 * Checks whether the provided blob should be imported.
 	 *
-	 * @param Writing_On_GitHub_Blob $blob Blob to validate.
+	 * @param Writing_On_GitHub_File_Info $file
 	 *
 	 * @return bool
 	 */
@@ -305,7 +279,7 @@ class Writing_On_GitHub_Import {
 	 *
 	 * @param Writing_On_GitHub_Blob $blob Blob to transform into a Post.
 	 *
-	 * @return Writing_On_GitHub_Post
+	 * @return Writing_On_GitHub_Post|false
 	 */
 	protected function blob_to_post( Writing_On_GitHub_Blob $blob ) {
 		$args = array( 'post_content' => $blob->content_import() );
@@ -313,7 +287,7 @@ class Writing_On_GitHub_Import {
 
 		$id = false;
 
-		if ( $meta ) {
+		if ( ! empty( $meta ) ) {
 			if ( array_key_exists( 'layout', $meta ) ) {
 				$args['post_type'] = $meta['layout'];
 				unset( $meta['layout'] );

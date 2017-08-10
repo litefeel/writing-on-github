@@ -14,7 +14,7 @@ class Writing_On_GitHub_Fetch_Client extends Writing_On_GitHub_Base_Client {
 	 *
 	 * @param string $sha Sha for commit to retrieve.
 	 *
-	 * @return array[Writing_On_GitHub_File_Info]|WP_Error
+	 * @return Writing_On_GitHub_File_Info[]|WP_Error
 	 */
 	public function compare( $sha ) {
 		// https://api.github.com/repos/litefeel/testwpsync/compare/861f87e8851b8debb78db548269d29f8da4d94ac...master
@@ -61,7 +61,7 @@ class Writing_On_GitHub_Fetch_Client extends Writing_On_GitHub_Base_Client {
 	 *
 	 * @param string $sha Commit sha to retrieve tree from.
 	 *
-	 * @return Writing_On_GitHub_Tree|WP_Error
+	 * @return Writing_On_GitHub_File_Info[]|WP_Error
 	 */
 	public function tree_recursive( $sha = '_default' ) {
 
@@ -93,20 +93,18 @@ class Writing_On_GitHub_Fetch_Client extends Writing_On_GitHub_Base_Client {
 	/**
 	 * Retrieves the blob data for a given sha
 	 *
-	 * @param stdClass $blob Tree blob data.
+	 * @param Writing_On_GitHub_File_Info $fileinfo
 	 *
 	 * @return Writing_On_GitHub_Blob|WP_Error
 	 */
-	public function blob( $blob ) {
-		$data = $this->call( 'GET', $this->blob_endpoint() . '/' . $blob->sha );
+	public function blob( Writing_On_GitHub_File_Info $fileinfo ) {
+		$data = $this->call( 'GET', $this->blob_endpoint() . '/' . $fileinfo->sha );
 
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
 
-		$data->path = $blob->path;
-		$obj = new Writing_On_GitHub_Blob( $data );
-
-		return $obj;
+		$data->path = $fileinfo->path;
+		return new Writing_On_GitHub_Blob( $data );
 	}
 }

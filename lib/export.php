@@ -29,30 +29,30 @@ class Writing_On_GitHub_Export {
 	/**
 	 * Updates all of the current posts in the database on master.
 	 *
-     * @param  bool    $force_all
+     * @param  bool    $force
+     *
      * @return string|WP_Error
      */
-	public function full( $force_all = false ) {
-		$posts = $this->app->database()->fetch_all_supported($force_all);
+	public function full( $force = false ) {
+		$posts = $this->app->database()->fetch_all_supported( $force );
 
 		if ( is_wp_error( $posts ) ) {
+            /*　@var WP_Error $posts */
 			return $posts;
 		}
 
-        $error = false;
+        $error = '';
 
         foreach ( $posts as $post ) {
             $result = $this->update( $post->id() );
             if ( is_wp_error( $result ) ) {
-                if ( $error ) {
-                    $error->add( $result->get_error_code(), $result->get_error_message() );
-                } else {
-                    $error = $result;
-                }
+                /* @var WP_Error $result */
+                $error = wogh_append_error( $error, $result );
             }
         }
 
         if ( is_wp_error( $error ) ) {
+            /* @var WP_Error $error */
             return $error;
         }
 
@@ -86,6 +86,7 @@ class Writing_On_GitHub_Export {
 		$post = $this->app->database()->fetch_by_id( $post_id );
 
 		if ( is_wp_error( $post ) ) {
+            /*　@var WP_Error $post */
 			return $post;
 		}
 
@@ -101,6 +102,7 @@ class Writing_On_GitHub_Export {
 		$result = $this->new_posts( array( $post ) );
 
 		if ( is_wp_error( $result ) ) {
+            /* @var WP_Error $result */
 			return $result;
 		}
 
@@ -110,36 +112,27 @@ class Writing_On_GitHub_Export {
 	/**
 	 * Updates GitHub-created posts with latest WordPress data.
 	 *
-	 * @param array<Writing_On_GitHub_Post> $posts Array of Posts to create.
+	 * @param Writing_On_GitHub_Post[] $posts Array of Posts to create.
 	 *
 	 * @return string|WP_Error
 	 */
 	public function new_posts( array $posts ) {
-		$error = false;
+        $persist = $this->app->api()->persist();
 
-		$persist = $this->app->api()->persist();
-
+		$error = '';
 		foreach ( $posts as $post ) {
 			$result = $this->new_post( $post, $persist );
 			if ( is_wp_error( $result ) ) {
-				if ( $error ) {
-					$error->add( $result->get_error_code(), $result->get_error_message() );
-				} else {
-					$error = $result;
-				}
+                /* @var WP_Error $result */
+                $error = wogh_append_error( $error, $result );
 			}
 		}
-
-
-
-		// $result = $this->app->api()->persist()->commit( $master );
 
 		if ( is_wp_error( $error ) ) {
 			return $error;
 		}
 
-		// return $this->update_shas( $posts );
-		return true;
+        return __( 'Export to GitHub completed successfully.', 'writing-on-github' );
 	}
 
 	protected function new_post( $post, $persist ) {
@@ -219,6 +212,7 @@ class Writing_On_GitHub_Export {
 		$post = $this->app->database()->fetch_by_id( $post_id );
 
 		if ( is_wp_error( $post ) ) {
+            /*　@var WP_Error $post */
 			return $post;
 		}
 
@@ -238,6 +232,7 @@ class Writing_On_GitHub_Export {
 		$result = $this->app->api()->persist()->delete_file( $github_path, $post->sha(), $message );
 
 		if ( is_wp_error( $result ) ) {
+            /*　@var WP_Error $result */
 			return $result;
 		}
 

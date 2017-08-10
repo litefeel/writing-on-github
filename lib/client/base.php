@@ -41,6 +41,7 @@ class Writing_On_GitHub_Base_Client {
 	 */
 	protected function call( $method, $endpoint, $body = array() ) {
 		if ( is_wp_error( $error = $this->can_call() ) ) {
+            /*　@var WP_Error $error */
 			return $error;
 		}
 
@@ -52,13 +53,11 @@ class Writing_On_GitHub_Base_Client {
 		);
 
 		if ( 'GET' !== $method ) {
-			$args['body'] = function_exists( 'wp_json_encode' ) ?
-				wp_json_encode( $body ) :
-				json_encode( $body );
+			$args['body'] = json_encode( $body );
 		}
 
-		$tmpbody = isset($args['body']) ? $args['body'] : '';
-		error_log("writing-on-github-call $method $endpoint $tmpbody");
+		// $tmpbody = isset( $args['body'] ) ? $args['body'] : '';
+		// error_log( "writing-on-github-call $method $endpoint $tmpbody" );
 
 		$response = wp_remote_request( $endpoint, $args );
 		$status   = wp_remote_retrieve_header( $response, 'status' );
@@ -71,7 +70,7 @@ class Writing_On_GitHub_Base_Client {
 					__( 'Method %s to endpoint %s failed with error: %s', 'writing-on-github' ),
 					$method,
 					$endpoint,
-					$body && $body->message ? $body->message : 'Unknown error'
+					( $body && $body->message ) ? $body->message : 'Unknown error'
 				)
 			);
 		}

@@ -101,7 +101,7 @@ class Writing_On_GitHub_Request {
 	 * @return array
 	 */
 	protected function headers() {
-		if ( $this->headers ) {
+		if ( ! empty( $this->headers ) ) {
 			return $this->headers;
 		}
 
