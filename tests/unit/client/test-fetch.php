@@ -32,6 +32,14 @@ class Writing_On_GitHub_Fetch_Client_Test extends Writing_On_GitHub_Base_Client_
         $this->malformed_repo( 'repositoryname' );
     }
 
+    public function test_compare() {
+        $this->set_get_trees( true, 'master' );
+        $this->set_get_compare( true );
+        $infos = $this->fetch->compare( '861f87e8851b8debb78db548269d29f8da4d94ac' );
+        $this->assertCount( 1, $infos );
+        $this->assertInstanceOf( 'Writing_On_GitHub_File_Info', $infos[0] );
+    }
+
     public function test_should_return_files_with_tree() {
         // $this->set_get_refs_heads_master( true );
         // $this->set_get_commits( true );

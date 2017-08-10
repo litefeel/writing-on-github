@@ -17,6 +17,11 @@ abstract class Writing_On_GitHub_Base_Client_Test extends Writing_On_GitHub_Test
 	 */
 	const TOKEN_OPTION_VALUE = 'the-token';
 
+    /**
+     * @var string
+     */
+    const BRANCH_OPTION_VALUE = 'master';
+
 	/**
 	 * @var array
 	 */
@@ -33,7 +38,8 @@ abstract class Writing_On_GitHub_Base_Client_Test extends Writing_On_GitHub_Test
 		WP_HTTP_TestCase::init();
 		update_option( 'wogh_repository', self::REPO_OPTION_VALUE );
 		update_option( 'wogh_oauth_token', self::TOKEN_OPTION_VALUE );
-		update_option( 'wogh_host', self::HOST_OPTION_VALUE );
+        update_option( 'wogh_host', self::HOST_OPTION_VALUE );
+		update_option( 'wogh_branch', self::BRANCH_OPTION_VALUE );
 		$this->http_responder = array( $this, 'mock_github_api' );
 	}
 
@@ -69,7 +75,8 @@ abstract class Writing_On_GitHub_Base_Client_Test extends Writing_On_GitHub_Test
 			$this->assertTrue( false, 'Called wrong repo.' );
 		}
 
-		$parts = array_slice( $url, 4 );
+        // git api
+		$parts = array_slice( $url, $url[3] === 'git' ? 4 : 3 );
 		array_unshift( $parts, strtolower( $request['method'] ) );
 		$endpoint = implode( '_', $parts );
 		$endpoint = str_replace( '?recursive=1', '', $endpoint );
@@ -206,6 +213,34 @@ abstract class Writing_On_GitHub_Base_Client_Test extends Writing_On_GitHub_Test
 			$succeed
 		);
 	}
+
+    protected function set_get_compare( $succeed ) {
+        $this->set_endpoint(
+            function ( $request ) {
+                if ( '[]' === $request['body'] ) {
+                    return false;
+                }
+                return true;
+            },
+            $succeed ? '200 OK' : '404 Not Found',
+            $succeed,
+            '861f87e8851b8debb78db548269d29f8da4d94ac...master'
+        );
+    }
+
+    protected function set_delete_contents( $succeed, $filepath ) {
+        $this->set_endpoint(
+            function ( $request ) {
+                if ( '[]' === $request['body'] ) {
+                    return false;
+                }
+                return true;
+            },
+            $succeed ? '200 OK' : '404 Not Found',
+            $succeed,
+            $filepath
+        );
+    }
 
 	protected function set_patch_refs_heads_master( $succeed ) {
 		$this->set_endpoint(
