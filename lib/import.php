@@ -79,7 +79,11 @@ class Writing_On_GitHub_Import {
             if ( $this->importable_raw_file( $blob ) ) {
                 $result = $this->import_raw_file( $blob, $is_remove );
             } elseif ( $this->importable_post( $blob ) ) {
-                $result = $this->import_post( $blob, $is_remove );
+                if ( $is_remove ) {
+                    $result = $this->delete_post( $blob );
+                } else {
+                    $result = $this->import_post( $blob );
+                }
             }
 
             if ( is_wp_error( $result ) ) {
@@ -165,26 +169,29 @@ class Writing_On_GitHub_Import {
     }
 
     /**
-     * Imports a post into wordpress
+     * Delete post
      * @param  Writing_On_GitHub_Blob $blob
-     * @param  bool                   $is_remove
      * @return WP_Error|bool
      */
-    protected function import_post( Writing_On_GitHub_Blob $blob, $is_remove ) {
-
-        if ( $is_remove ) {
-            $id = $blob->id();
-            if ( empty( $id ) ) {
-                return false;
-            }
-            $result = $this->app->database()->delete_post( $id );
-            if ( is_wp_error( $result ) ) {
-                /* @var WP_Error $result */
-                return $result;
-            }
-            return true;
+    protected function delete_post( Writing_On_GitHub_Blob $blob ) {
+        $id = $blob->id();
+        if ( empty( $id ) ) {
+            return false;
         }
+        $result = $this->app->database()->delete_post( $id );
+        if ( is_wp_error( $result ) ) {
+            /* @var WP_Error $result */
+            return $result;
+        }
+        return true;
+    }
 
+    /**
+     * Imports a post into wordpress
+     * @param  Writing_On_GitHub_Blob $blob
+     * @return WP_Error|bool
+     */
+    protected function import_post( Writing_On_GitHub_Blob $blob ) {
         $post = $this->blob_to_post( $blob );
 
         if ( ! $post instanceof Writing_On_GitHub_Post ) {
@@ -207,6 +214,8 @@ class Writing_On_GitHub_Import {
                 return $result;
             }
         }
+
+        clean_post_cache( $post->id() );
 
         return true;
     }
