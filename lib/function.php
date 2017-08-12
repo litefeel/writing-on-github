@@ -13,3 +13,15 @@ function wogh_append_error( $error, $error2 ) {
     }
     return $error2;
 }
+
+/**
+ * Test is equal front matter of post and blob
+ * @param  Writing_On_GitHub_Post $post
+ * @param  Writing_On_GitHub_Blob $blob
+ * @return bool
+ */
+function wogh_equal_front_matter( $post, $blob ) {
+    $str1 = $post->front_matter();
+    $str2 = $blob->front_matter();
+    return trim($str1) === trim($str2);
+}

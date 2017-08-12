@@ -45,6 +45,12 @@ class Writing_On_GitHub_Blob {
     protected $frontmatter = false;
 
     /**
+     * The front matter of github post
+     * @var string
+     */
+    protected $front_matter = '';
+
+    /**
      * Instantiates a new Blob object.
      *
      * @param stdClass $data Raw blob data.
@@ -83,7 +89,7 @@ class Writing_On_GitHub_Blob {
             $content = base64_decode( $content );
         }
 
-        $this->frontmatter = '---' === substr( $this->content = $content, 0, 3 ) ? true : false;
+        $this->frontmatter = '---' === substr( $this->content = $content, 0, 3 );
 
         return $this;
     }
@@ -115,6 +121,14 @@ class Writing_On_GitHub_Blob {
     }
 
     /**
+     * The front matter of github post
+     * @return string
+     */
+    public function front_matter() {
+        return $this->front_matter;
+    }
+
+    /**
      * Returns the formatted/filtered blob content used for import.
      *
      * @return string
@@ -125,6 +139,7 @@ class Writing_On_GitHub_Blob {
         if ( $this->has_frontmatter() ) {
             // Break out content.
             preg_match( '/(^---(.*?)---$)?(.*)/ms', $content, $matches );
+            $this->front_matter = $matches[1];
             $content = array_pop( $matches );
         }
 

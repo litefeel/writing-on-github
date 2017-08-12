@@ -197,8 +197,10 @@ class Writing_On_GitHub_Import {
             return $result;
         }
 
-        if ( $post->is_new() ) {
-            $result = $this->app->export()->new_posts( $new );
+        if ( $post->is_new() ||
+                ! wogh_equal_front_matter( $post, $blob ) ) {
+
+            $result = $this->app->export()->new_posts( array( $post ) );
 
             if ( is_wp_error( $result ) ) {
                 /** @var WP_Error $result */
@@ -247,6 +249,7 @@ class Writing_On_GitHub_Import {
 
             file_put_contents($path, $blob->content());
         }
+        return true;
     }
 
     /**
