@@ -154,6 +154,8 @@ class Writing_On_GitHub_Database {
 
 			$meta = apply_filters( 'wogh_pre_import_meta', $post->get_meta(), $post );
 
+            update_post_meta( $post_id, '_wogh_sha', $meta['_wogh_sha'] );
+
 			// unset( $meta['tags'] );
 			// unset( $meta['categories'] );
 			// unset( $meta['author'] );
