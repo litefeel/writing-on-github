@@ -92,6 +92,14 @@ class Writing_On_GitHub_Admin {
             )
         );
 
+        register_setting( Writing_On_GitHub::$text_domain, 'wogh_dont_export_content' );
+        add_settings_field( 'wogh_dont_export_content', __( 'Don\'t export content', 'writing-on-github' ), array( &$this, 'checkbox_field_callback' ), Writing_On_GitHub::$text_domain, 'general', array(
+                'default'   => '',
+                'name'      => 'wogh_dont_export_content',
+                'help_text' => __( 'Do not export post content to github, only export meta.', 'writing-on-github' ),
+            )
+        );
+
         // register_setting( Writing_On_GitHub::$text_domain, 'wogh_ignore_metas' );
         // add_settings_field( 'wogh_ignore_metas', __( 'Ignore post metas', 'writing-on-github' ), array( &$this, 'textarea_field_callback' ), Writing_On_GitHub::$text_domain, 'general', array(
         //      'default'   => '',
