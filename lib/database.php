@@ -106,74 +106,55 @@ class Writing_On_GitHub_Database {
     }
 
     /**
-     * Saves an array of Post objects to the database
+     * Save an post to database
      * and associates their author as well as their latest
      *
-     * @param Writing_On_GitHub_Post[] $posts Array of Posts to save.
-     *
-     * @return string|WP_Error
+     * @param  Writing_On_GitHub_Post $post [description]
+     * @return WP_Error|true
      */
-    public function save_posts( array $posts ) {
+    public function save_post( Writing_On_GitHub_Post $post ) {
+        $args = apply_filters( 'wogh_pre_import_args', $this->post_args( $post ), $post );
 
-        /**
-         * Whether an error has occurred.
-         *
-         * @var WP_Error|false $error
-         */
-        $error = false;
+        remove_filter( 'content_save_pre', 'wp_filter_post_kses' );
+        $post_id = $post->is_new() ?
+            wp_insert_post( $args, true ) :
+            wp_update_post( $args, true );
+        add_filter( 'content_save_pre', 'wp_filter_post_kses' );
 
-        foreach ( $posts as $post ) {
-            $args = apply_filters( 'wogh_pre_import_args', $this->post_args( $post ), $post );
-
-            remove_filter( 'content_save_pre', 'wp_filter_post_kses' );
-            $post_id = $post->is_new() ?
-                wp_insert_post( $args, true ) :
-                wp_update_post( $args, true );
-            add_filter( 'content_save_pre', 'wp_filter_post_kses' );
-
-            if ( is_wp_error( $post_id ) ) {
-                /* @var WP_Error $post_id */
-                $error = wogh_append_error( $error, $post_id );
-
-                // Abort saving if updating the post fails.
-                continue;
-            }
-
-            if ( $post->is_new() ) {
-                $author = false;
-                $meta = $post->get_meta();
-                if ( ! empty( $meta ) && ! empty( $meta['author'] ) ) {
-                    $author = $meta['author'];
-                }
-                $user    = $this->fetch_commit_user( $author );
-                $user_id = is_wp_error( $user ) ? 0 : $user->ID;
-                $this->set_post_author( $post_id, $user_id );
-            }
-
-            $post->set_post( get_post( $post_id ) );
-
-            $meta = apply_filters( 'wogh_pre_import_meta', $post->get_meta(), $post );
-
-            update_post_meta( $post_id, '_wogh_sha', $meta['_wogh_sha'] );
-
-            // unset( $meta['tags'] );
-            // unset( $meta['categories'] );
-            // unset( $meta['author'] );
-            // unset( $meta['post_date'] );
-            // unset( $meta['post_excerpt'] );
-            // unset( $meta['permalink'] );
-            // unset( $meta['link'] );
-
-            // foreach ( $meta as $key => $value ) {
-            //  update_post_meta( $post_id, $key, $value );
-            // }
+        if ( is_wp_error( $post_id ) ) {
+            /* @var WP_Error $post_id */
+            return $post_id;
         }
 
-        if ( $error ) {
-            return $error;
+        if ( $post->is_new() ) {
+            $author = false;
+            $meta = $post->get_meta();
+            if ( ! empty( $meta ) && ! empty( $meta['author'] ) ) {
+                $author = $meta['author'];
+            }
+            $user    = $this->fetch_commit_user( $author );
+            $user_id = is_wp_error( $user ) ? 0 : $user->ID;
+            $this->set_post_author( $post_id, $user_id );
         }
 
-        return __( 'Successfully saved posts.', 'writing-on-github' );
+        $post->set_post( get_post( $post_id ) );
+
+        $meta = apply_filters( 'wogh_pre_import_meta', $post->get_meta(), $post );
+
+        update_post_meta( $post_id, '_wogh_sha', $meta['_wogh_sha'] );
+
+        // unset( $meta['tags'] );
+        // unset( $meta['categories'] );
+        // unset( $meta['author'] );
+        // unset( $meta['post_date'] );
+        // unset( $meta['post_excerpt'] );
+        // unset( $meta['permalink'] );
+        // unset( $meta['link'] );
+
+        // foreach ( $meta as $key => $value ) {
+        //  update_post_meta( $post_id, $key, $value );
+        // }
+        return true;
     }
 
     protected function post_args( $post ) {

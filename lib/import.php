@@ -56,26 +56,35 @@ class Writing_On_GitHub_Import {
      * import blob by files
      * @param  Writing_On_GitHub_File_Info[] $files
      *
-     * @return string|WP_Error
+     * @return true|WP_Error
      */
     protected function import_files( $files ) {
 
-        $error      = false;
-        $delete_ids = false;
+        $error = true;
 
-        $result = $this->compare( $files, $delete_ids );
+        foreach ( $files as $file ) {
+            if ( ! $this->importable_file( $file ) ) {
+                continue;
+            }
 
-        if ( is_wp_error( $result ) ) {
-            return $result;
-        }
+            $blob = $this->app->api()->fetch()->blob( $file );
+            // network error ?
+            if ( ! $blob instanceof Writing_On_GitHub_Blob ) {
+                continue;
+            }
 
-        if ( $delete_ids ) {
-            foreach ($delete_ids as $id) {
-                $result = $this->app->database()->delete_post( $id );
-                if ( is_wp_error( $result ) ) {
-                    /* @var WP_Error $result */
-                    $error = wogh_append_error( $error, $result );
-                }
+            $is_remove = 'removed' == $file->status;
+
+            $result = false;
+            if ( $this->importable_raw_file( $blob ) ) {
+                $result = $this->import_raw_file( $blob, $is_remove );
+            } elseif ( $this->importable_post( $blob ) ) {
+                $result = $this->import_post( $blob, $is_remove );
+            }
+
+            if ( is_wp_error( $result ) ) {
+                /* @var WP_Error $result */
+                $error = wogh_append_error( $error, $result );
             }
         }
 
@@ -108,87 +117,6 @@ class Writing_On_GitHub_Import {
     }
 
     /**
-     * Do compare
-     * @param  Writing_On_GitHub_File_Info[]|WP_Error $files
-     * @param  int[] &$delete_ids
-     *
-     * @return string|WP_Error
-     */
-    protected function compare( $files, &$delete_ids ) {
-        if ( is_wp_error( $files ) ) {
-            /* @var WP_Error $files */
-            return $files;
-        }
-
-        $posts = array();
-        $new   = array();
-
-        $idsmap = array();
-
-        foreach ( $files as $file ) {
-            if ( ! $this->importable_file( $file ) ) {
-                continue;
-            }
-
-            $blob = $this->app->api()->fetch()->blob( $file );
-            // network error ?
-            if ( ! $blob instanceof Writing_On_GitHub_Blob ) {
-                continue;
-            }
-
-            if ( $this->importable_raw_file( $blob ) ) {
-                $this->import_raw_file( $blob, $file->status == 'removed' );
-                continue;
-            }
-
-            if ( ! $this->importable_blob( $blob ) ) {
-                continue;
-            }
-
-            $post = $this->blob_to_post( $blob );
-
-            if ( $file->status == 'removed' ) {
-                if ( $blob->id() ) {
-                    $idsmap[$blob->id()] = true;
-                }
-            } elseif ( $post != false ) {
-                $posts[] = $post;
-                if ( $post->is_new() ) {
-                    $new[] = $post;
-                }
-            }
-        }
-
-        foreach ( $posts as $post ) {
-            if ( $post->id() && isset( $idsmap[ $post->id() ] ) ) {
-                unset( $idsmap[ $post->id() ] );
-            }
-        }
-        $delete_ids = array();
-        foreach ( $idsmap as $id => $value ) {
-            $delete_ids[] = $id;
-        }
-
-        // $this->app->database()->save_posts( $posts, $commit->author_email() );
-
-        $result = $this->app->database()->save_posts( $posts );
-
-        if ( is_wp_error( $result ) ) {
-            return $result;
-        }
-
-        if ( ! empty( $new ) ) {
-            $result = $this->app->export()->new_posts( $new );
-
-            if ( is_wp_error( $result ) ) {
-                return $result;
-            }
-        }
-
-        return $posts;
-    }
-
-    /**
      * Checks whether the provided blob should be imported.
      *
      * @param Writing_On_GitHub_File_Info $file
@@ -197,19 +125,16 @@ class Writing_On_GitHub_Import {
      */
     protected function importable_file( Writing_On_GitHub_File_Info $file ) {
 
-        // only _pages and _posts
-        if ( strncasecmp($file->path, '_pages/', strlen('_pages/') ) != 0 &&
-             strncasecmp($file->path, '_posts/', strlen('_posts/') ) != 0 &&
-             strncasecmp($file->path, 'images/', strlen('images/') ) != 0 ) {
-            return false;
+        $path = $file->path;
+
+        // only _pages, _posts and images
+        $prefixs = array( '_pages/', '_posts/', 'images/');
+        foreach ($prefixs as $prefix) {
+            if ( ! strncasecmp($path, $prefix, strlen( $prefix ) ) {
+                return true;
+            }
         }
-
-
-        // if ( ! $file->has_frontmatter() ) {
-        //  return false;
-        // }
-
-        return true;
+        return false;
     }
 
     /**
@@ -219,7 +144,7 @@ class Writing_On_GitHub_Import {
      *
      * @return bool
      */
-    protected function importable_blob( Writing_On_GitHub_Blob $blob ) {
+    protected function importable_post( Writing_On_GitHub_Blob $blob ) {
         // global $wpdb;
 
         // // Skip the repo's readme.
@@ -239,6 +164,56 @@ class Writing_On_GitHub_Import {
         return true;
     }
 
+    /**
+     * Imports a post into wordpress
+     * @param  Writing_On_GitHub_Blob $blob
+     * @param  bool                   $is_remove
+     * @return WP_Error|bool
+     */
+    protected function import_post( Writing_On_GitHub_Blob $blob, $is_remove ) {
+
+        if ( $is_remove ) {
+            $id = $blob->id();
+            if ( empty( $id ) ) {
+                return false;
+            }
+            $result = $this->app->database()->delete_post( $id );
+            if ( is_wp_error( $result ) ) {
+                /* @var WP_Error $result */
+                return $result;
+            }
+            return true;
+        }
+
+        $post = $this->blob_to_post( $blob );
+
+        if ( ! $post instanceof Writing_On_GitHub_Post ) {
+            return false;
+        }
+
+        $result = $this->app->database()->save_post( $post );
+        if ( is_wp_error( $result ) ) {
+            /** @var WP_Error $result */
+            return $result;
+        }
+
+        if ( $post->is_new() ) {
+            $result = $this->app->export()->new_posts( $new );
+
+            if ( is_wp_error( $result ) ) {
+                /** @var WP_Error $result */
+                return $result;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * import raw file
+     * @param  Writing_On_GitHub_Blob $blob
+     * @return bool
+     */
     protected function importable_raw_file( Writing_On_GitHub_Blob $blob ) {
         if ( $blob->has_frontmatter() ) {
             return false;
