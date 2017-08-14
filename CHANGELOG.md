@@ -1,5 +1,14 @@
 ## Changelog ##
 
+### [1.6][1.6] ###
+
+* Add Settings link on plugins page
+* Add an option of "Don't export content"
+* Fixed cannot auto export to github when change Frontmatter from github
+* Don't export to github when has not changed
+* Reduce momory when import from github
+* Refactor the code to enhance stability
+
 ### [1.5.1][1.5.1] ###
 
 * Compatible with PHP5.0
@@ -42,3 +51,4 @@
   [1.4]: https://github.com/litefeel/writing-on-github/releases/tag/1.4
   [1.5]: https://github.com/litefeel/writing-on-github/releases/tag/1.5
   [1.5.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.5.1
+  [1.6]: https://github.com/litefeel/writing-on-github/releases/tag/1.6
