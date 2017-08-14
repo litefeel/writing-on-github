@@ -1,5 +1,6 @@
 bin
 tests
+phpunit.xml.dist
 .editorconfig
 .gitignore
 .scrutinizer.yml
