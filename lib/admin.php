@@ -10,12 +10,40 @@
 class Writing_On_GitHub_Admin {
 
     /**
+     * plugin file name rel plugin dir.
+     * @var string
+     */
+    protected $plugin_file;
+
+    /**
      * Hook into GitHub API
      */
-    public function __construct() {
+    public function __construct( $plugin_file ) {
+        $this->plugin_file = $plugin_file;
+
         add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
         add_action( 'admin_init', array( $this, 'register_settings' ) );
         add_action( 'current_screen', array( $this, 'trigger_cron' ) );
+        add_filter( 'plugin_action_links', array($this, 'settings_links'), 10, 2 );
+    }
+
+    /**
+     * settings link
+     * @param  string[] $links
+     * @param  string $file
+     * @return string[]
+     */
+    public function settings_links( $links, $file ) {
+        if ( $file != $this->plugin_file ) {
+            return $links;
+        }
+
+        $settings_link = '<a href="options-general.php?page=' .
+        Writing_On_GitHub::$text_domain . '">' . __( 'Settings', 'writing-on-github' ) . '</a>';
+
+        array_push( $links, $settings_link );
+
+        return $links;
     }
 
     /**

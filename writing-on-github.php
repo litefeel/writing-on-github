@@ -108,7 +108,7 @@ class Writing_On_GitHub {
         self::$instance = $this;
 
         if ( is_admin() ) {
-            $this->admin = new Writing_On_GitHub_Admin;
+            $this->admin = new Writing_On_GitHub_Admin( plugin_basename( __FILE__ ) );
         }
 
         $this->controller = new Writing_On_GitHub_Controller( $this );
