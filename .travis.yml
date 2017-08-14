@@ -3,15 +3,15 @@ language: php
 os:
   - linux
 
-# deploy master to svn truck
 env:
-  global: DEPLOYMASTER=1
-#
-env:
-- WP_VERSION=latest WP_MULTISITE=0
-- WP_VERSION=latest WP_MULTISITE=1
-- WP_VERSION=3.9 WP_MULTISITE=0
-# - WP_VERSION=3.9 WP_MULTISITE=1
+  global:
+  # deploy master to svn truck
+  - DEPLOYMASTER=1
+  matrix:
+  - WP_VERSION=latest WP_MULTISITE=0
+  - WP_VERSION=latest WP_MULTISITE=1
+  - WP_VERSION=3.9 WP_MULTISITE=0
+  # - WP_VERSION=3.9 WP_MULTISITE=1
 
 php:
 - 5.4
