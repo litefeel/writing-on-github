@@ -4,9 +4,9 @@
 
 * Add Settings link on plugins page
 * Add an option of "Don't export content"
-* Fixed cannot auto export to github when change Frontmatter from github
+* Fixed cannot auto export to github when change frontmatter from github
 * Don't export to github when has not changed
-* Reduce momory when import from github
+* Reduce memory when import from github
 * Refactor the code to enhance stability
 
 ### [1.5.1][1.5.1] ###
