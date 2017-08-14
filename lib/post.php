@@ -23,6 +23,12 @@ class Writing_On_GitHub_Post {
     public $id = 0;
 
     /**
+     * Blob object
+     * @var Writing_On_GitHub_Blob
+     */
+    public $blob;
+
+    /**
      * Post object
      * @var WP_Post
      */
@@ -427,6 +433,22 @@ class Writing_On_GitHub_Post {
      */
     public function get_meta() {
         return $this->meta;
+    }
+
+    /**
+     * Get the blob
+     * @return Writing_On_GitHub_Blob
+     */
+    public function get_blob() {
+        return $this->blob;
+    }
+
+    /**
+     * Set the blob
+     * @param Writing_On_GitHub_Blob $blob
+     */
+    public function set_blob( Writing_On_GitHub_Blob $blob ) {
+        $this->blob = $blob;
     }
 
     /**

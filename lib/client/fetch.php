@@ -48,6 +48,8 @@ class Writing_On_GitHub_Fetch_Client extends Writing_On_GitHub_Base_Client {
         return $this->call( 'GET', $this->content_endpoint( $post->github_path() ) );
     }
 
+
+
     public function exists( $path ) {
         $result = $this->call( 'GET', $this->content_endpoint( $path ) );
         if ( is_wp_error( $result ) ) {
@@ -106,5 +108,19 @@ class Writing_On_GitHub_Fetch_Client extends Writing_On_GitHub_Base_Client {
 
         $data->path = $fileinfo->path;
         return new Writing_On_GitHub_Blob( $data );
+    }
+
+    /**
+     * Get blob by path
+     * @param  string $path
+     * @return Writing_On_GitHub_Blob|WP_Error
+     */
+    public function blob_by_path( $path ) {
+        $result = $this->call( 'GET', $this->content_endpoint( $path ) );
+        if ( is_wp_error( $result ) ) {
+            return $result;
+        }
+
+        return new Writing_On_GitHub_Blob( $result );
     }
 }

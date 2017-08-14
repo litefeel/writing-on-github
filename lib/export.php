@@ -99,7 +99,7 @@ class Writing_On_GitHub_Export {
             $post->set_old_github_path($old_github_path);
         }
 
-        $result = $this->new_posts( array( $post ) );
+        $result = $this->export_post( $post );
 
         if ( is_wp_error( $result ) ) {
             /* @var WP_Error $result */
@@ -110,36 +110,47 @@ class Writing_On_GitHub_Export {
     }
 
     /**
-     * Updates GitHub-created posts with latest WordPress data.
-     *
-     * @param Writing_On_GitHub_Post[] $posts Array of Posts to create.
-     *
-     * @return string|WP_Error
+     * Post to blob
+     * @param  Writing_On_GitHub_Post $post
+     * @return WP_Error|string
      */
-    public function new_posts( array $posts ) {
-        $persist = $this->app->api()->persist();
+    protected function post_to_blob( Writing_On_GitHub_Post $post ) {
+        if ( ! $post->get_blob()
+            && $post->old_github_path()
+            && wogh_is_dont_export_content() ) {
 
-        $error = '';
-        foreach ( $posts as $post ) {
-            $result = $this->new_post( $post, $persist );
-            if ( is_wp_error( $result ) ) {
-                /* @var WP_Error $result */
-                $error = wogh_append_error( $error, $result );
+
+            $blob = $this->app->api()->fetch()->blob_by_path( $post->old_github_path() );
+
+            if ( is_wp_error( $blob ) ) {
+                /** @var WP_Error $blob */
+                return $blob;
             }
+
+            $post->set_blob( $blob );
         }
 
-        if ( is_wp_error( $error ) ) {
-            return $error;
-        }
-
-        return __( 'Export to GitHub completed successfully.', 'writing-on-github' );
+        return $post->to_blob();
     }
 
-    protected function new_post( $post, $persist ) {
+    /**
+     * Export post to github
+     * @param  Writing_On_GitHub_Post $post
+     * @return WP_Error|true
+     */
+    public function export_post( Writing_On_GitHub_Post $post ) {
+        // check blob
+        $blob = $this->post_to_blob( $post );
+        if ( is_wp_error( $blob ) ) {
+            /** @var WP_Error $blob */
+            return $blob;
+        }
+
+        $result = false;
+
+        $persist = $this->app->api()->persist();
         $github_path = $post->github_path();
         $old_github_path = $post->old_github_path();
-        $blob = $post->to_blob();
-        $result = false;
 
         if ( $old_github_path && $old_github_path != $github_path ) {
             // rename

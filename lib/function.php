@@ -25,3 +25,11 @@ function wogh_equal_front_matter( $post, $blob ) {
     $str2 = $blob->front_matter();
     return trim($str1) === trim($str2);
 }
+
+/**
+ * Check is dont export wordpress content
+ * @return bool
+ */
+function wogh_is_dont_export_content() {
+    return 'yes' === get_option( 'wogh_dont_export_content' );
+}

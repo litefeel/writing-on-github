@@ -207,7 +207,7 @@ class Writing_On_GitHub_Import {
         if ( $post->is_new() ||
                 ! wogh_equal_front_matter( $post, $blob ) ) {
 
-            $result = $this->app->export()->new_posts( array( $post ) );
+            $result = $this->app->export()->export_post( $post );
 
             if ( is_wp_error( $result ) ) {
                 /** @var WP_Error $result */
@@ -318,6 +318,7 @@ class Writing_On_GitHub_Import {
         $post = new Writing_On_GitHub_Post( $args, $this->app->api() );
         $post->set_old_github_path( $blob->path() );
         $post->set_meta( $meta );
+        $post->set_blob( $blob );
         $blob->set_id( $post->id() );
 
         return $post;
