@@ -128,10 +128,16 @@ class Writing_On_GitHub_Post {
      * Combines the 2 content parts for GitHub
      */
     public function github_content() {
-        $content = $this->front_matter() . $this->post_content();
-        $ending  = apply_filters( 'wogh_line_endings', "\n" );
+        $use_blob = wogh_is_dont_export_content() && $this->blob;
+        $content = $use_blob ?
+            $this->blob->post_content() :
+            $this->post_content();
 
-        return preg_replace( '~(*BSR_ANYCRLF)\R~', $ending, $content );
+        return $this->front_matter() . $content;
+        // $content = $this->front_matter() . $content;
+        // $ending  = apply_filters( 'wogh_line_endings', "\n" );
+
+        // return preg_replace( '~(*BSR_ANYCRLF)\R~', $ending, $content );
     }
 
     /**

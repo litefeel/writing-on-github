@@ -51,6 +51,12 @@ class Writing_On_GitHub_Blob {
     protected $front_matter = '';
 
     /**
+     * Content without front matter
+     * @var string
+     */
+    protected $post_content;
+
+    /**
      * Instantiates a new Blob object.
      *
      * @param stdClass $data Raw blob data.
@@ -129,18 +135,29 @@ class Writing_On_GitHub_Blob {
     }
 
     /**
+     * Content without front matter
+     * @return string
+     */
+    public function post_content() {
+        if ( ! $this->post_content ) {
+            $this->content_import();
+        }
+        return $this->post_content;
+    }
+
+    /**
      * Returns the formatted/filtered blob content used for import.
      *
      * @return string
      */
     public function content_import() {
-        $content = $this->content();
+        $this->post_content = $content = $this->content();
 
         if ( $this->has_frontmatter() ) {
             // Break out content.
-            preg_match( '/(^---(.*?)---$)?(.*)/ms', $content, $matches );
+            preg_match( '/(^---(.*?)---$(\r\n|\n|\r)?)?(.*)/ms', $content, $matches );
             $this->front_matter = $matches[1];
-            $content = array_pop( $matches );
+            $this->post_content = $content = array_pop( $matches );
         }
 
         if ( function_exists( 'wpmarkdown_markdown_to_html' ) ) {
