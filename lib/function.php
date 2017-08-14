@@ -33,3 +33,16 @@ function wogh_equal_front_matter( $post, $blob ) {
 function wogh_is_dont_export_content() {
     return 'yes' === get_option( 'wogh_dont_export_content' );
 }
+
+/**
+ * Calc git sha
+ * https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_object_storage
+ * @param  string $contnet
+ * @return string
+ */
+function wogh_git_sha( $contnet ) {
+    // $header = "blob $len\0"
+    // sha1($header . $content)
+    $len = strlen( $content );
+    return sha1( "blob $len\0$content" );
+}

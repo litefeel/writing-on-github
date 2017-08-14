@@ -112,7 +112,7 @@ class Writing_On_GitHub_Export {
     /**
      * Post to blob
      * @param  Writing_On_GitHub_Post $post
-     * @return WP_Error|string
+     * @return WP_Error|Writing_On_GitHub_Blob
      */
     protected function post_to_blob( Writing_On_GitHub_Post $post ) {
         if ( ! $post->get_blob()
@@ -190,6 +190,11 @@ class Writing_On_GitHub_Export {
             }
         } elseif ( $old_github_path && $old_github_path == $github_path ) {
             // update
+            $sha = wogh_git_sha( $blob->content() );
+            if ( $sha === $blob->sha() ) {
+                // don't export when has not changed
+                return true;
+            }
             $message = apply_filters(
                 'wogh_commit_msg_update_post',
                 sprintf(
@@ -206,8 +211,8 @@ class Writing_On_GitHub_Export {
         }
 
         $sha = $result->content->sha;
-        $post->set_sha($sha);
-        $post->set_old_github_path($github_path);
+        $post->set_sha( $sha );
+        $post->set_old_github_path( $github_path );
 
         return true;
     }
