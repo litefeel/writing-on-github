@@ -4,7 +4,8 @@ os:
   - linux
 
 # deploy master to svn truck
-# env: DEPLOYMASTER=1
+env:
+  global: DEPLOYMASTER=1
 #
 env:
 - WP_VERSION=latest WP_MULTISITE=0
@@ -70,4 +71,7 @@ after_script:
   fi
 
 after_success:
-- deploy2wp/scripts/deploy2wp.sh
+- |
+  if [[ -n $PHP56 && $WP_VERSION == latest && $WP_MULTISITE == 0 ]]; then
+    deploy2wp/scripts/deploy2wp.sh
+  fi
