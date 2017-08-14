@@ -61,7 +61,7 @@ script:
 - ./vendor/bin/phpunit --coverage-clover=coverage.clover
 - if [[ -n "$PHP56" ]]; then cat coverage.clover; fi
 - git clone https://github.com/litefeel/deploy2wp.git
-- sh deploy2wp/scripts/install.sh
+- sh deploy2wp/scripts/install.sh dev
 
 after_script:
 - |
