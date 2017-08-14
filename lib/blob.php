@@ -95,7 +95,11 @@ class Writing_On_GitHub_Blob {
             $content = base64_decode( $content );
         }
 
-        $this->frontmatter = '---' === substr( $this->content = $content, 0, 3 );
+        // remove whitespace from the beginning of content,
+        // To prevent blank lines before yml
+        $this->content = ltrim( $content );
+
+        $this->frontmatter = '---' === substr( $this->content, 0, 3 );
 
         return $this;
     }
@@ -244,7 +248,7 @@ class Writing_On_GitHub_Blob {
         $this->path = isset( $data->path ) ? $data->path : '';
 
         $this->set_content(
-            isset( $data->content ) ? trim( $data->content ) : '',
+            isset( $data->content ) ? $data->content : '',
             isset( $data->encoding ) && 'base64' === $data->encoding ? true : false
         );
     }

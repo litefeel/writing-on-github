@@ -37,10 +37,10 @@ function wogh_is_dont_export_content() {
 /**
  * Calc git sha
  * https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_object_storage
- * @param  string $contnet
+ * @param  string $content
  * @return string
  */
-function wogh_git_sha( $contnet ) {
+function wogh_git_sha( $content ) {
     // $header = "blob $len\0"
     // sha1($header . $content)
     $len = strlen( $content );
