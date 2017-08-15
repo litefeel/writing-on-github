@@ -1,5 +1,10 @@
 ## Changelog ##
 
+### [1.6.1][1.6.1] ###
+
+* Compatible with wordpress 4.8.1
+* Add index.php
+
 ### [1.6][1.6] ###
 
 * Add Settings link on plugins page
@@ -52,3 +57,4 @@
   [1.5]: https://github.com/litefeel/writing-on-github/releases/tag/1.5
   [1.5.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.5.1
   [1.6]: https://github.com/litefeel/writing-on-github/releases/tag/1.6
+  [1.6.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.6.1

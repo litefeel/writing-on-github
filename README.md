@@ -4,11 +4,11 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/litefeel/writing-on-github/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/litefeel/writing-on-github/?branch=master)
 
 **Contributors:** litefeel  
-**Tags:** github, git, version control, content, collaboration, publishing  
+**Tags:** github, git, version control, content, collaboration, publishing, writing  
 **Donate link:** https://www.paypal.me/litefeel  
 **Requires at least:** 3.9  
-**Tested up to:** 4.8  
-**Stable tag:** 1.6  
+**Tested up to:** 4.8.1  
+**Stable tag:** 1.6.1  
 **License:** GPLv2  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
