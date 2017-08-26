@@ -55,10 +55,11 @@ class Writing_On_GitHub_Import {
     /**
      * import blob by files
      * @param  Writing_On_GitHub_File_Info[] $files
+     * @param  boolean $force
      *
      * @return true|WP_Error
      */
-    protected function import_files( $files ) {
+    protected function import_files( $files, $force = false ) {
 
         $error = true;
 
@@ -82,7 +83,7 @@ class Writing_On_GitHub_Import {
                 if ( $is_remove ) {
                     $result = $this->delete_post( $blob );
                 } else {
-                    $result = $this->import_post( $blob );
+                    $result = $this->import_post( $blob, $force );
                 }
             }
 
@@ -98,9 +99,10 @@ class Writing_On_GitHub_Import {
     /**
      * Imports the latest commit on the master branch.
      *
+     * @param  boolean $force
      * @return string|WP_Error
      */
-    public function master() {
+    public function master( $force = false ) {
         $result = $this->app->api()->fetch()->tree_recursive();
 
         if ( is_wp_error( $result ) ) {
@@ -109,7 +111,7 @@ class Writing_On_GitHub_Import {
         }
 
         if ( is_array( $result ) ) {
-            $result = $this->import_files( $result );
+            $result = $this->import_files( $result, $force );
         }
 
         if ( is_wp_error( $result ) ) {
@@ -189,10 +191,11 @@ class Writing_On_GitHub_Import {
     /**
      * Imports a post into wordpress
      * @param  Writing_On_GitHub_Blob $blob
+     * @param  boolean                $force
      * @return WP_Error|bool
      */
-    protected function import_post( Writing_On_GitHub_Blob $blob ) {
-        $post = $this->blob_to_post( $blob );
+    protected function import_post( Writing_On_GitHub_Blob $blob, $force = false ) {
+        $post = $this->blob_to_post( $blob, $force );
 
         if ( ! $post instanceof Writing_On_GitHub_Post ) {
             return false;
@@ -265,10 +268,11 @@ class Writing_On_GitHub_Import {
      * Imports a single blob content into matching post.
      *
      * @param Writing_On_GitHub_Blob $blob Blob to transform into a Post.
+     * @param boolean                $force
      *
      * @return Writing_On_GitHub_Post|false
      */
-    protected function blob_to_post( Writing_On_GitHub_Blob $blob ) {
+    protected function blob_to_post( Writing_On_GitHub_Blob $blob, $force = false ) {
         $args = array( 'post_content' => $blob->content_import() );
         $meta = $blob->meta();
 
@@ -304,7 +308,7 @@ class Writing_On_GitHub_Import {
 
         $meta['_wogh_sha'] = $blob->sha();
 
-        if ( $id ) {
+        if ( ! $force && $id ) {
             $old_sha = get_post_meta( $id, '_wogh_sha', true );
             $old_github_path = get_post_meta( $id, '_wogh_github_path', true );
 

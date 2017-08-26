@@ -132,7 +132,7 @@ class Writing_On_GitHub {
         add_action( 'delete_post', array( $this->controller, 'delete_post' ) );
         add_action( 'wp_ajax_nopriv_wogh_push_request', array( $this->controller, 'pull_posts' ) );
         add_action( 'wogh_export', array( $this->controller, 'export_all' ), 10, 2 );
-        add_action( 'wogh_import', array( $this->controller, 'import_master' ), 10, 1 );
+        add_action( 'wogh_import', array( $this->controller, 'import_master' ), 10, 2 );
         add_filter( 'get_edit_post_link', array( $this, 'edit_post_link' ), 10, 3 );
 
         // add_filter( 'wogh_post_meta', array( $this, 'ignore_post_meta' ), 10, 1 );
@@ -217,8 +217,8 @@ class Writing_On_GitHub {
     /**
      * Sets and kicks off the import cronjob
      */
-    public function start_import() {
-        $this->start_cron( 'import' );
+    public function start_import( $force = false ) {
+        $this->start_cron( 'import', $force );
     }
 
     /**

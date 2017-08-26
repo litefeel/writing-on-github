@@ -256,13 +256,14 @@ class Writing_On_GitHub_Admin {
         if ( 'export' === $_GET['action'] ) {
             Writing_On_GitHub::$instance->start_export();
         }
-
         if ( 'force_export' === $_GET['action'] ) {
             Writing_On_GitHub::$instance->start_export(true);
         }
-
         if ( 'import' === $_GET['action'] ) {
             Writing_On_GitHub::$instance->start_import();
+        }
+        if ( 'force_import' === $_GET['action'] ) {
+            Writing_On_GitHub::$instance->start_import(true);
         }
 
         wp_redirect( admin_url( 'options-general.php?page=writing-on-github' ) );

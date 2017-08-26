@@ -90,10 +90,11 @@ class Writing_On_GitHub_Controller {
 
     /**
      * Imports posts from the current master branch.
-     *
+     * @param  integer $user_id
+     * @param  boolean $force
      * @return boolean
      */
-    public function import_master( $user_id = 0 ) {
+    public function import_master( $user_id = 0, $force = false ) {
         if ( ! $this->app->semaphore()->is_open() ) {
             return $this->app->response()->error( new WP_Error(
                 'semaphore_locked',
@@ -109,7 +110,7 @@ class Writing_On_GitHub_Controller {
             wp_set_current_user( $user_id );
         }
 
-        $result = $this->app->import()->master();
+        $result = $this->app->import()->master( $force );
 
         $this->app->semaphore()->unlock();
 
