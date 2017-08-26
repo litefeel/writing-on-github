@@ -1,5 +1,9 @@
 ## Changelog ##
 
+### [1.7][1.7] ###
+
+* Add an option to force import from github
+
 ### [1.6.1][1.6.1] ###
 
 * Compatible with wordpress 4.8.1
@@ -58,3 +62,4 @@
   [1.5.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.5.1
   [1.6]: https://github.com/litefeel/writing-on-github/releases/tag/1.6
   [1.6.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.6.1
+  [1.7]: https://github.com/litefeel/writing-on-github/releases/tag/1.7
