@@ -67,10 +67,7 @@ class Writing_On_GitHub_Request {
      * @return boolean
      */
     public function is_ping() {
-        $headers = $this->headers();
-
-        $event = $headers['X-Github-Event'];
-        return 'ping' == $event;
+        return 'ping' == $this->webhook_event();
     }
 
     /**
@@ -78,10 +75,16 @@ class Writing_On_GitHub_Request {
      * @return boolean
      */
     public function is_push() {
-        $headers = $this->headers();
+        return 'push' == $this->webhook_event();
+    }
 
-        $event = $headers['X-Github-Event'];
-        return 'push' == $event;
+    /**
+     * Return X-Github-Event in headers.
+     * @return string
+     */
+    public function webhook_event() {
+        $headers = $this->headers();
+        return $headers['X-Github-Event'];
     }
 
     /**

@@ -57,7 +57,8 @@ class Writing_On_GitHub_Controller {
         if ( ! $this->app->request()->is_push() ) {
             return $this->app->response()->error( new WP_Error(
                 'invalid_headers',
-                __( 'Failed to validate webhook event.', 'writing-on-github' )
+                sprintf( 'Failed to validate webhook event: %s.',
+                    $this->app->request()->webhook_event() )
             ) );
         }
         $payload = $this->app->request()->payload();
