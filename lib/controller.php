@@ -62,14 +62,10 @@ class Writing_On_GitHub_Controller {
         }
         $payload = $this->app->request()->payload();
 
-        if ( ! $payload->should_import() ) {
-            return $this->app->response()->error( new WP_Error(
-                'invalid_payload',
-                sprintf(
-                    __( "%s won't be imported.", 'writing-on-github' ),
-                    strtolower( $payload->get_commit_id() ) ? : '[Missing Commit ID]'
-                )
-            ) );
+        $error = $payload->should_import();
+        if ( is_wp_error( $error ) ) {
+            /*　@var WP_Error $error */
+            return $this->app->response()->error( $error );
         }
 
         $this->app->semaphore()->lock();

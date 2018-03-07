@@ -37,12 +37,18 @@ class Writing_On_GitHub_Payload {
     /**
      * Returns whether payload should be imported.
      *
-     * @return bool
+     * @return true|WP_Error
      */
     public function should_import() {
         // @todo how do we get this without importing the whole api object just for this?
         if ( strtolower( $this->data->repository->full_name ) !== strtolower( $this->app->api()->fetch()->repository() ) ) {
-            return false;
+            return new WP_Error(
+                'incorrect_repository',
+                sprintf( 'Incorrect repository, %s -> %s .',
+                    $this->data->repository->full_name,
+                    $this->app->api()->fetch()->repository()
+                )
+            );
         }
 
         // The last term in the ref is the payload_branch name.
@@ -52,7 +58,13 @@ class Writing_On_GitHub_Payload {
         $branch = $this->app->api()->fetch()->branch();
 
         if ( $branch !== $payload_branch ) {
-            return false;
+            return new WP_Error(
+                'incorrect_branch',
+                sprintf( 'Incorrect branch, %s -> %s .',
+                    $payload_branch,
+                    $branch
+                )
+            );
         }
 
         // We add a tag to commits we push out, so we shouldn't pull them in again.
@@ -63,11 +75,17 @@ class Writing_On_GitHub_Payload {
         }
 
         if ( $tag === substr( $this->message(), -1 * strlen( $tag ) ) ) {
-            return false;
+            return new WP_Error(
+                'skip_import',
+                'Skip import on auto export post.'
+            );
         }
 
         if ( ! $this->get_commit_id() ) {
-            return false;
+            return new WP_Error(
+                'invalid_payload',
+                "[Missing Commit ID] won't be imported."
+            );
         }
 
         return true;
