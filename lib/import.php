@@ -304,6 +304,15 @@ class Writing_On_GitHub_Import {
                 $blob->set_id($id);
                 unset( $meta['ID'] );
             }
+
+            if ( array_key_exists( 'post_date', $meta ) ) {
+                if ( empty( $meta['post_date'] ) ) {
+                    $meta['post_date'] = current_time( 'mysql' );
+                }
+
+                $args['post_date'] = $meta['post_date'];
+                unset( $meta['post_date'] );
+            }
         }
 
         $meta['_wogh_sha'] = $blob->sha();
