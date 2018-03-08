@@ -301,7 +301,7 @@ class Writing_On_GitHub_Import {
 
             if ( array_key_exists( 'ID', $meta ) ) {
                 $id = $args['ID'] = $meta['ID'];
-                $blob->set_id($id);
+                $blob->set_id( $id );
                 unset( $meta['ID'] );
             }
 
