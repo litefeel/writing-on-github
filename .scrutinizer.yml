@@ -1,6 +1,4 @@
-filter:
-    excluded_paths:
-        - 'tests/*'
+
 
 tools:
     php_mess_detector:
