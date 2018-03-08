@@ -1,5 +1,11 @@
 ## Changelog ##
 
+### [1.8][1.8] ###
+
+* Apply post_date from github
+* Friendly error message when validate webhook event
+* Friendly error message when can not import
+
 ### [1.7][1.7] ###
 
 * Add an option to force import from github
@@ -63,3 +69,4 @@
   [1.6]: https://github.com/litefeel/writing-on-github/releases/tag/1.6
   [1.6.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.6.1
   [1.7]: https://github.com/litefeel/writing-on-github/releases/tag/1.7
+  [1.8]: https://github.com/litefeel/writing-on-github/releases/tag/1.8

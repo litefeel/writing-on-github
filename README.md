@@ -7,8 +7,8 @@
 **Tags:** github, git, version control, content, collaboration, publishing, writing  
 **Donate link:** https://www.paypal.me/litefeel  
 **Requires at least:** 3.9  
-**Tested up to:** 4.8.1  
-**Stable tag:** 1.7  
+**Tested up to:** 4.9.4  
+**Stable tag:** 1.8  
 **License:** GPLv2  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -102,6 +102,7 @@ Writing On GitHub is also capable of importing posts directly from GitHub, witho
     ---
     post_title: 'Post Title'
     post_name: 'this is post name'
+    post_date: '2018-03-07 15:21:26'
     layout: post_type_probably_post
     published: true_or_false
     author: author_name
