@@ -119,7 +119,7 @@ class Writing_On_GitHub_Request {
             // X-GitHub-Event: push
             // X-Hub-Signature: sha1=98185ffa2c4684c9a1324c57086709acca9dddc7
             foreach ( $headers as $name => $value ) {
-                $this->headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', $name ) ) ) ) ] = $value;
+                $this->headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '-', ' ', $name ) ) ) ) ] = $value;
             }
         } else {
             /**
