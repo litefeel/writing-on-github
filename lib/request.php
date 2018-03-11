@@ -108,19 +108,28 @@ class Writing_On_GitHub_Request {
             return $this->headers;
         }
 
-        if ( function_exists( 'getallheaders' ) ) {
-
-            $this->headers = getallheaders();
-            return $this->headers;
-        }
-        /**
-         * Nginx and pre 5.4 workaround.
-         * @see http://www.php.net/manual/en/function.getallheaders.php
-         */
         $this->headers = array();
-        foreach ( $_SERVER as $name => $value ) {
-            if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
-                $this->headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+        if ( function_exists( 'getallheaders' ) ) {
+            $headers = getallheaders();
+            // github webhook
+            // content-type: application/json
+            // Expect:
+            // User-Agent: GitHub-Hookshot/7a71d82
+            // X-GitHub-Delivery: a331b200-2537-11e8-9d7e-ce0853020b44
+            // X-GitHub-Event: push
+            // X-Hub-Signature: sha1=98185ffa2c4684c9a1324c57086709acca9dddc7
+            foreach ( $headers as $name => $value ) {
+                $this->headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', $name ) ) ) ) ] = $value;
+            }
+        } else {
+            /**
+             * Nginx and pre 5.4 workaround.
+             * @see http://www.php.net/manual/en/function.getallheaders.php
+             */
+            foreach ( $_SERVER as $name => $value ) {
+                if ( 'HTTP_' === substr( $name, 0, 5 ) ) {
+                    $this->headers[ str_replace( ' ', '-', ucwords( strtolower( str_replace( '_', ' ', substr( $name, 5 ) ) ) ) ) ] = $value;
+                }
             }
         }
 
