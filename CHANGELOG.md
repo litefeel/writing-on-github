@@ -1,5 +1,9 @@
 ## Changelog ##
 
+### [1.9][1.9] ###
+
+* Fixed webhook error on apache server
+
 ### [1.8][1.8] ###
 
 * Apply post_date from github
@@ -70,3 +74,4 @@
   [1.6.1]: https://github.com/litefeel/writing-on-github/releases/tag/1.6.1
   [1.7]: https://github.com/litefeel/writing-on-github/releases/tag/1.7
   [1.8]: https://github.com/litefeel/writing-on-github/releases/tag/1.8
+  [1.9]: https://github.com/litefeel/writing-on-github/releases/tag/1.9

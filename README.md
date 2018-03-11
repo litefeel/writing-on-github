@@ -8,7 +8,7 @@
 **Donate link:** https://www.paypal.me/litefeel  
 **Requires at least:** 3.9  
 **Tested up to:** 4.9.4  
-**Stable tag:** 1.8  
+**Stable tag:** 1.9  
 **License:** GPLv2  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
