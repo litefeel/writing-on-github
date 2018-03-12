@@ -380,7 +380,7 @@ class Writing_On_GitHub {
             } else {
                 WP_CLI::$write( $msg );
             }
-        } elseif ( true === WP_DEBUG ) {
+        } elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
             if ( is_array( $msg ) || is_object( $msg ) ) {
                 error_log( print_r( $msg, true ) );
             } else {
