@@ -208,6 +208,7 @@ class Writing_On_GitHub_Import {
         }
 
         if ( $post->is_new() ||
+                ! wogh_equal_path( $post, $blob ) ||
                 ! wogh_equal_front_matter( $post, $blob ) ) {
 
             $result = $this->app->export()->export_post( $post );

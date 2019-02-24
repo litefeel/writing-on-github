@@ -26,6 +26,12 @@ function wogh_equal_front_matter( $post, $blob ) {
     return trim($str1) === trim($str2);
 }
 
+function wogh_equal_path( $post, $blob ) {
+    $str1 = $post->github_path();
+    $str2 = $blob->path();
+    return trim($str1) === trim($str2);
+}
+
 /**
  * Check is dont export wordpress content
  * @return bool

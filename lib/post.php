@@ -232,7 +232,7 @@ class Writing_On_GitHub_Post {
      */
     public function github_filename() {
         if ( 'post' === $this->type() ) {
-            $filename = get_the_time( 'Y-m-d-', $this->id ) . $this->get_name() . '.md';
+            $filename = get_the_time( 'Y/', $this->id ) . $this->get_name() . '.md';
         } else {
             $filename = $this->get_name() . '.md';
         }
