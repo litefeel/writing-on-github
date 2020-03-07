@@ -1,5 +1,11 @@
 ## Changelog ##
 
+### [1.10][1.10] ###
+
+* Fixed cannot publish post from github in _draffts
+* Fixed cannot delete post from github
+* Change github path to /_posts/$year/$postname
+
 ### [1.9][1.9] ###
 
 * Fixed webhook error on apache server
@@ -75,3 +81,4 @@
   [1.7]: https://github.com/litefeel/writing-on-github/releases/tag/1.7
   [1.8]: https://github.com/litefeel/writing-on-github/releases/tag/1.8
   [1.9]: https://github.com/litefeel/writing-on-github/releases/tag/1.9
+  [1.10]: https://github.com/litefeel/writing-on-github/releases/tag/1.10
