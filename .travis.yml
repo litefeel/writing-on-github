@@ -13,12 +13,11 @@ services:
   - mysql
 
 env:
-  - WP_VERSION=latest WP_MULTISITE=0
+  # deploy master to svn truck
+  - WP_VERSION=latest WP_MULTISITE=0 DEPLOYMASTER=1
   - WP_VERSION=latest WP_MULTISITE=1
   - WP_VERSION=5.2 WP_MULTISITE=0
   # - WP_VERSION=5.2 WP_MULTISITE=1
-  # deploy master to svn truck
-  # - WP_VERSION=latest WP_MULTISITE=0 DEPLOYMASTER=1
 
 before_script:
   - phpenv config-rm xdebug.ini
