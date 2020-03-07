@@ -176,7 +176,14 @@ class Writing_On_GitHub_Import {
      * @return WP_Error|bool
      */
     protected function delete_post( Writing_On_GitHub_Blob $blob ) {
-        $id = $blob->id();
+        $id = false;
+        $meta = $blob->meta();
+        if ( ! empty( $meta ) ) {
+            if ( array_key_exists( 'ID', $meta ) ) {
+                $id = $meta['ID'];
+            }
+        }
+        
         if ( empty( $id ) ) {
             return false;
         }
