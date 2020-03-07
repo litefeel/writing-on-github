@@ -46,7 +46,7 @@ class Writing_On_GitHub_Import {
         }
 
         if ( is_wp_error( $result ) ) {
-            return $files;
+            return $result;
         }
 
         return __( 'Payload processed', 'writing-on-github' );
