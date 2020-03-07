@@ -1,77 +1,44 @@
-sudo: false
 language: php
 os:
   - linux
 
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
+
+services:
+  - mysql
+
 env:
-  global:
-  # deploy master to svn truck
-  # - DEPLOYMASTER=1
-  matrix:
   - WP_VERSION=latest WP_MULTISITE=0
   - WP_VERSION=latest WP_MULTISITE=1
-  - WP_VERSION=3.9 WP_MULTISITE=0
-  # - WP_VERSION=3.9 WP_MULTISITE=1
-
-php:
-- 5.4
-- 5.5
-- 5.6
-- 7.0
-- 7.1
-- 7.2
-
-allow_failures:
-- php: nightly
-- php: 7.2
+  - WP_VERSION=5.2 WP_MULTISITE=0
+  # - WP_VERSION=5.2 WP_MULTISITE=1
+  # deploy master to svn truck
+  # - WP_VERSION=latest WP_MULTISITE=0 DEPLOYMASTER=1
 
 before_script:
-- |
-  if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then
-    export PHP56=1
-  fi
-- |
-  if [[ -z "$PHP56" ]]; then
-    # Remove Xdebug for a huge performance increase:
-    if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
-      phpenv config-rm xdebug.ini
-    else
-      echo "xdebug.ini does not exist"
-    fi
-  fi
-- bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-- export PATH="$HOME/.composer/vendor/bin:$PATH"
-- |
-  if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
-    composer require --dev "phpunit/phpunit=5.7.*"
-  else
-    composer require --dev "phpunit/phpunit=4.8.*"
-  fi
-# - |
-#   composer require --dev wp-coding-standards/wpcs
-#   phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
-- composer self-update
-- composer install
-- phpenv versions
-- php --version
-
+  - phpenv config-rm xdebug.ini
+  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - composer self-update
+  - composer install
+  - phpenv versions
+  - php --version
 
 script:
-#  - phpcs --standard=phpcs.ruleset.xml $(find . -name '*.php')
-- ./vendor/bin/phpunit --coverage-clover=coverage.clover
-# - if [[ -n "$PHP56" ]]; then cat coverage.clover; fi
-- git clone https://github.com/litefeel/deploy2wp.git
-- sh deploy2wp/scripts/install.sh
+  - ./vendor/bin/phpunit --coverage-clover=coverage.clover
+  - git clone https://github.com/litefeel/deploy2wp.git
+  - sh deploy2wp/scripts/install.sh
 
 after_script:
-- |
-  if [[ -n "$PHP56" ]]; then
-    wget https://scrutinizer-ci.com/ocular.phar
-    php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-  fi
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
 after_success:
-- |
-  if [[ -n $PHP56 && $WP_VERSION == latest && $WP_MULTISITE == 0 ]]; then
-    deploy2wp/scripts/deploy2wp.sh
-  fi
+  - |
+    if [[ "$DEPLOYMASTER" == "1" ]]; then
+      deploy2wp/scripts/deploy2wp.sh
+    fi
