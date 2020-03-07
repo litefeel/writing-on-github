@@ -134,7 +134,7 @@ class Writing_On_GitHub_Import {
         $path = $file->path;
 
         // only _pages, _posts and images
-        $prefixs = array( '_pages/', '_posts/', 'images/');
+        $prefixs = array( '_pages/', '_posts/', '_drafts/', 'images/');
         foreach ($prefixs as $prefix) {
             if ( ! strncasecmp($path, $prefix, strlen( $prefix ) ) ) {
                 return true;
