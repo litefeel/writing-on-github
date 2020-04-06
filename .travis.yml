@@ -38,6 +38,7 @@ after_script:
 
 after_success:
   - |
-    if [[ "$DEPLOYMASTER" == "1" ]]; then
+    echo "TRAVIS_PHP_VERSION:$TRAVIS_PHP_VERSION"
+    if [[ "$DEPLOYMASTER" == "1" && "$TRAVIS_PHP_VERSION" == "7.4" ]]; then
       deploy2wp/scripts/deploy2wp.sh
     fi
