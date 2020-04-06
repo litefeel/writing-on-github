@@ -179,21 +179,28 @@ class Writing_On_GitHub {
     public function the_content($content) {
         $arr = wp_upload_dir();
         $baseurl = $arr['baseurl'] . '/writing-on-github';
+        $basedir = $arr['basedir'] . '/writing-on-github';
 
         $content = preg_replace_callback(
-            '/(<img [^>]*?src=[\'"])\s*(\/images\/[^\s#]\S+)\s*([\'"][^>]*?>)/',
-            function($matchs) use ($baseurl) {
-                $url = $baseurl . $matchs[2];
-                return "${matchs[1]}$url${matchs[3]}";
+            '/(<img [^>]*?src=[\'"])\S*?(\/images\/\S+)([\'"].*?>)/',
+            function($matchs) use ($baseurl, $basedir) {
+                if (is_file($basedir . $matchs[2])) {
+                    $url = $baseurl . $matchs[2];
+                    return "${matchs[1]}$url${matchs[3]}";
+                }
+                return "${matchs[0]}";
             },
             $content
         );
 
         $content = preg_replace_callback(
-            '/(<a [^>]*?href=[\'"])\s*(\/images\/[^\s#]\S+)\s*([\'"][^>]*?>)/',
-            function($matchs) use ($baseurl) {
-                $url = $baseurl . $matchs[2];
-                return "${matchs[1]}$url${matchs[3]}";
+            '/(<a [^>]*?href=[\'"])\S*?(\/images\/S+)\s*([\'"].*?>)/',
+            function($matchs) use ($baseurl, $basedir) {
+                if (is_file($basedir . $matchs[2])) {
+                    $url = $baseurl . $matchs[2];
+                    return "${matchs[1]}$url${matchs[3]}";
+                }
+                return "${matchs[0]}";
             },
             $content
         );
