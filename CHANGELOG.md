@@ -1,5 +1,9 @@
 ## Changelog ##
 
+### [1.11][1.11] ###
+
+* Fixed correct the url of files in the images directory
+
 ### [1.10][1.10] ###
 
 * Fixed cannot publish post from github in _draffts
@@ -82,3 +86,4 @@
   [1.8]: https://github.com/litefeel/writing-on-github/releases/tag/1.8
   [1.9]: https://github.com/litefeel/writing-on-github/releases/tag/1.9
   [1.10]: https://github.com/litefeel/writing-on-github/releases/tag/1.10
+  [1.11]: https://github.com/litefeel/writing-on-github/releases/tag/1.11
